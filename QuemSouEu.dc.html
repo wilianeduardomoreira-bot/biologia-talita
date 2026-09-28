@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-noprint="" class="blueprint" style="margin:32px 0;padding:22px 18px;max-width:720px">
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap">
+    <p style="margin:0;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Quem sou eu? · pista {{ num }} de {{ total }}</p>
+    <p style="margin:0;font:600 13px/1.2 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Acertos: {{ score }}</p>
+  </div>
+  <p style="font:600 clamp(24px,6vw,32px)/1.15 var(--fh);margin:14px 0 18px;text-wrap:balance">“{{ clue }}”</p>
+  <div role="group" aria-label="Escolha a estrutura" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px">
+    <sc-for list="{{ opts }}" as="o" hint-placeholder-count="5">
+      <button type="button" onClick="{{ o.pick }}" disabled="{{ o.disabled }}" aria-label="{{ o.aria }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;min-height:92px;padding:10px 6px;border:1px solid {{ o.border }};border-width:{{ o.bw }};background:{{ o.bg }};color:var(--ink);cursor:pointer;font:600 16px/1.1 var(--fh)" style-hover="background: {{ o.hover }}">
+        <svg width="56" height="40" viewBox="{{ o.vb }}" aria-hidden="true" style="overflow:visible"><use href="{{ o.sym }}"></use></svg>
+        <span>{{ o.name }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div aria-live="polite">
+    <sc-if value="{{ answered }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:16px">
+        <p style="font:600 20px/1.2 var(--fh);margin:0 0 6px;color:{{ fbColor }}">{{ fbTitle }}</p>
+        <p style="font:400 16px/1.55 var(--fb);margin:0 0 12px">{{ why }}</p>
+        <button type="button" onClick="{{ next }}" style="min-height:44px;padding:8px 18px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer">{{ nextLabel }}</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:480}}">
+const ORG = {
+  ribo: { name: 'Ribossomo', sym: '#s-ribo', vb: '0 0 20 20' },
+  rer: { name: 'RER', sym: '#s-rer', vb: '0 0 124 76' },
+  rel: { name: 'REL', sym: '#s-rel', vb: '0 0 124 76' },
+  golgi: { name: 'Golgi', sym: '#s-golgi', vb: '0 0 110 90' },
+  liso: { name: 'Lisossomo', sym: '#s-liso', vb: '0 0 40 40' }
+};
+const CLUES = [
+  ['Produzo proteínas. Quem sou eu?', 'ribo', 'O ribossomo lê o RNA mensageiro e une aminoácidos: é a síntese de proteínas.'],
+  ['Tenho ribossomos associados à minha superfície.', 'rer', 'Os ribossomos presos à membrana dão o aspecto “rugoso” ao retículo endoplasmático rugoso.'],
+  ['Produzo principalmente lipídios.', 'rel', 'O retículo liso (sem ribossomos) produz lipídios, como os fosfolipídios das membranas. Liso → Lipídios.'],
+  ['Modifico, empacoto e direciono proteínas.', 'golgi', 'Esse é o trabalho do complexo golgiense: modifica, organiza, empacota e direciona.'],
+  ['Faço digestão intracelular.', 'liso', 'O lisossomo tem enzimas digestivas. “Lise” quer dizer quebra.'],
+  ['Não tenho membrana e existo até nas bactérias.', 'ribo', 'O ribossomo é a única estrutura desta lista sem membrana, e toda célula, inclusive a bacteriana, tem ribossomos.'],
+  ['Proteínas que serão exportadas entram em mim logo depois de começarem a ser montadas.', 'rer', 'Proteínas de secreção são feitas por ribossomos presos ao RER e entram no retículo para serem dobradas e processadas.'],
+  ['Nas células do fígado, ajudo a neutralizar substâncias como álcool e alguns medicamentos.', 'rel', 'A desintoxicação é uma função importante do REL, muito desenvolvido nas células do fígado.'],
+  ['Sou uma pilha de sacos achatados e dou origem aos lisossomos.', 'golgi', 'O complexo golgiense é formado por cisternas empilhadas; as vesículas que ele libera com enzimas digestivas são os lisossomos.'],
+  ['Reciclo organelas velhas da própria célula.', 'liso', 'Essa é a autofagia: o lisossomo digere partes desgastadas da célula e os materiais são reaproveitados.'],
+  ['Hormônios como a testosterona e o estrogênio são esteroides, um tipo de lipídio. Quem os produz?', 'rel', 'Esteroides são lipídios, então quem os produz é o REL. Não confunda com a insulina, que é proteína (RER).'],
+  ['Recebo vesículas vindas do RER.', 'golgi', 'As vesículas de transporte saem do RER e se fundem ao complexo golgiense.']
+];
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+class Component extends DCLogic {
+  state = { order: CLUES.map((_, i) => i), pos: 0, chosen: null, score: 0 };
+  componentDidMount() { const first = [0, 1, 2, 3, 4], rest = shuffle([5, 6, 7, 8, 9, 10, 11]); this.setState({ order: [...shuffle(first), ...rest] }); }
+  renderVals() {
+    const { order, pos, chosen, score } = this.state;
+    const done = pos >= order.length;
+    const [clue, ans, why] = CLUES[order[Math.min(pos, order.length - 1)]];
+    const answered = chosen !== null;
+    const opts = Object.keys(ORG).map(id => {
+      const o = ORG[id], isAns = id === ans, isCh = id === chosen;
+      let border = 'var(--line2)', bg = 'transparent', bw = '1px';
+      if (answered && isAns) { border = 'var(--ok)'; bg = 'color-mix(in oklch, var(--ok) 10%, transparent)'; bw = '2px'; }
+      else if (answered && isCh) { border = 'var(--bad)'; bg = 'color-mix(in oklch, var(--bad) 9%, transparent)'; bw = '2px'; }
+      return { ...o, border, bg, bw, disabled: answered, hover: answered ? bg : 'var(--hover)',
+        aria: o.name + (answered && isAns ? ' — resposta correta' : answered && isCh ? ' — sua resposta, incorreta' : ''),
+        pick: () => { if (this.state.chosen !== null) return; this.setState(s => ({ chosen: id, score: s.score + (id === ans ? 1 : 0) })); } };
+    });
+    const right = chosen === ans, last = pos === order.length - 1;
+    return {
+      num: Math.min(pos + 1, order.length), total: order.length, score, clue, opts, answered,
+      fbTitle: right ? 'Acertou: ' + ORG[ans].name + '.' : 'Era ' + ORG[ans].name + '.',
+      fbColor: right ? 'var(--ok)' : 'var(--bad)', why: (right ? '' : 'Você escolheu ' + (chosen ? ORG[chosen].name : '') + '. ') + why,
+      nextLabel: last ? `Recomeçar (${score}/${order.length})` : 'Próxima pista →',
+      next: () => last ? this.setState({ order: shuffle(CLUES.map((_, i) => i)), pos: 0, chosen: null, score: 0 }) : this.setState(s => ({ pos: s.pos + 1, chosen: null }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-noprint="" style="max-width:720px;margin:24px 0 0">
+  <sc-if value="{{ inQuiz }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font:600 13px/1.2 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">
+        <span>Questão {{ num }} de {{ total }}</span><span>{{ typeLabel }} · {{ topicLabel }}</span>
+      </div>
+      <div aria-hidden="true" style="height:4px;background:var(--line);margin:10px 0 20px"><div style="height:4px;width:{{ pct }};background:var(--accent);transition:width .3s"></div></div>
+      <p style="font:500 19px/1.45 var(--fb);margin:0 0 16px;text-wrap:pretty">{{ stem }}</p>
+      <sc-if value="{{ hasFig }}" hint-placeholder-val="{{ false }}">
+        <div class="blueprint" style="padding:14px;margin:0 0 16px;display:grid;place-items:center">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="{{ figVb }}" role="img" aria-label="{{ figAlt }}" style="width:100%;max-width:{{ figMax }};height:auto;overflow:visible"><use href="{{ figSym }}"></use></svg>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isChoice }}" hint-placeholder-val="{{ true }}">
+        <div role="radiogroup" aria-label="Alternativas" style="display:grid;gap:8px">
+          <sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+            <button type="button" role="radio" aria-checked="{{ o.sel }}" onClick="{{ o.pick }}" disabled="{{ o.disabled }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;min-height:48px;padding:12px 14px;border:1px solid {{ o.border }};border-width:{{ o.bw }};background:{{ o.bg }};color:var(--ink);font:400 16px/1.4 var(--fb);cursor:pointer" style-hover="background: {{ o.hover }}">
+              <span style="flex:none;width:22px;font:600 17px/1.35 var(--fh);color:var(--accent-ink)">{{ o.letter }}</span>
+              <span style="flex:1;min-width:0">{{ o.t }}</span>
+              <span style="flex:none;font:600 12px/1.9 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:{{ o.markColor }}">{{ o.mark }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isMatch }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:10px">
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+            <label style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:6px 12px;align-items:center;padding:10px 12px;border:1px solid {{ r.border }};border-width:{{ r.bw }}">
+              <span style="font:600 18px/1.2 var(--fh)">{{ r.left }} <span style="color:{{ r.markColor }}">{{ r.mark }}</span></span>
+              <select value="{{ r.value }}" onChange="{{ r.change }}" disabled="{{ r.disabled }}" style="min-height:44px;width:100%;padding:6px 10px;font:400 15px/1.3 var(--fb);color:var(--ink);background:var(--bg);border:1px solid var(--line2);border-radius:0">
+                <sc-for list="{{ r.choices }}" as="ch" hint-placeholder-count="4"><option value="{{ ch.v }}">{{ ch.t }}</option></sc-for>
+              </select>
+            </label>
+          </sc-for>
+        </div>
+      </sc-if>
+      <div aria-live="polite">
+        <sc-if value="{{ confirmed }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px;padding:16px 18px;border:1px solid {{ fbColor }};font:400 16px/1.55 var(--fb)">
+            <p style="font:600 22px/1.15 var(--fh);margin:0 0 8px;color:{{ fbColor }}">{{ fbTitle }}</p>
+            <sc-if value="{{ hasChosenWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0 0 8px">{{ chosenWhy }}</p></sc-if>
+            <p style="margin:0">{{ explain }}</p>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
+        <sc-if value="{{ showConfirm }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ confirm }}" disabled="{{ cantConfirm }}" style="min-height:48px;padding:8px 22px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer;opacity:{{ confirmOp }}">Confirmar resposta</button>
+        </sc-if>
+        <sc-if value="{{ confirmed }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ next }}" style="min-height:48px;padding:8px 22px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer">{{ nextLabel }}</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ inResult }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div class="blueprint" style="padding:22px 20px">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <p style="margin:0;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Resultado</p>
+        <p style="margin:6px 0 0;font:600 clamp(56px,16vw,96px)/1 var(--fh);letter-spacing:-.02em">{{ pctScore }}</p>
+        <p style="margin:6px 0 0;font:400 17px/1.4 var(--fb)">{{ scoreText }}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px;margin-top:28px">
+        <div>
+          <p style="margin:0 0 10px;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--ok)">✓ Assuntos dominados</p>
+          <ul style="margin:0;padding:0;list-style:none;display:grid;gap:8px">
+            <sc-for list="{{ good }}" as="t" hint-placeholder-count="2"><li style="font:400 16px/1.3 var(--fb);display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px"><span>{{ t.name }}</span><span style="font:600 16px/1.3 var(--fh)">{{ t.frac }}</span></li></sc-for>
+          </ul>
+          <sc-if value="{{ noGood }}" hint-placeholder-val="{{ false }}"><p style="margin:0;color:var(--muted)">Ainda nenhum. Revise e tente de novo.</p></sc-if>
+        </div>
+        <div>
+          <p style="margin:0 0 10px;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)">↺ Precisam de revisão</p>
+          <ul style="margin:0;padding:0;list-style:none;display:grid;gap:8px">
+            <sc-for list="{{ bad }}" as="t" hint-placeholder-count="2"><li style="font:400 16px/1.3 var(--fb);display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:6px"><a href="{{ t.href }}" style="color:var(--ink)">{{ t.name }}</a><span style="font:600 16px/1.3 var(--fh)">{{ t.frac }}</span></li></sc-for>
+          </ul>
+          <sc-if value="{{ noBad }}" hint-placeholder-val="{{ false }}"><p style="margin:0;color:var(--muted)">Nenhum. Excelente.</p></sc-if>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:24px">
+        <sc-if value="{{ hasErrors }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ openReview }}" style="min-height:48px;padding:8px 22px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.04em;cursor:pointer;text-transform:uppercase">Revisar meus erros</button>
+        </sc-if>
+        <button type="button" onClick="{{ restart }}" style="min-height:48px;padding:8px 20px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 17px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">↺ Refazer simulado</button>
+      </div>
+      <sc-if value="{{ reviewing }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:28px;display:grid;gap:20px">
+          <p style="margin:0;font:600 26px/1.1 var(--fh)">Revisão dos erros</p>
+          <sc-for list="{{ errors }}" as="e" hint-placeholder-count="2">
+            <article style="padding-top:16px;border-top:1px solid var(--line2)">
+              <p style="margin:0 0 6px;font:600 12px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Questão {{ e.n }} · {{ e.topic }}</p>
+              <p style="margin:0 0 10px;font:500 17px/1.45 var(--fb)">{{ e.stem }}</p>
+              <p style="margin:0 0 4px;font:400 15px/1.5 var(--fb)"><strong style="color:var(--bad)">✗ Sua resposta:</strong> {{ e.yours }}</p>
+              <p style="margin:0 0 8px;font:400 15px/1.5 var(--fb)"><strong style="color:var(--ok)">✓ Correta:</strong> {{ e.right }}</p>
+              <p style="margin:0 0 8px;font:400 15px/1.55 var(--fb);color:var(--muted)">{{ e.explain }}</p>
+              <a href="{{ e.href }}" style="font:600 15px/1 var(--fh);letter-spacing:.03em">Rever o capítulo →</a>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:720}}">
+const TOPICS = {
+  org: ['Organização celular', '#cap-01'], tipos: ['Procarionte × Eucarionte', '#cap-03'], reinos: ['Animal, vegetal e fungos', '#cap-04'],
+  organelas: ['Organelas', '#cap-06'], viagem: ['Viagem da proteína', '#cap-07'], passivo: ['Membrana e transporte passivo', '#cap-08'],
+  osmose: ['Osmose', '#cap-11'], ativo: ['Transporte ativo', '#cap-12']
+};
+const TF = ['Verdadeiro', 'Falso'];
+const Q = [
+  { type: 'mc', topic: 'org', stem: 'Qual sequência vai do nível de organização mais amplo para o mais simples?', ans: 1,
+    opts: [['Célula → tecido → órgão → sistema → organismo', 'Essa é a ordem inversa: do mais simples para o mais amplo.'], ['Organismo → sistema → órgão → tecido → célula', ''], ['Organismo → órgão → sistema → célula → tecido', 'Sistemas reúnem órgãos, e tecidos são formados por células.'], ['Sistema → organismo → tecido → órgão → célula', 'O organismo é o nível mais amplo; ele é formado por sistemas.']],
+    explain: 'O organismo é formado por sistemas; sistemas, por órgãos; órgãos, por tecidos; tecidos, por células.' },
+  { type: 'tf', topic: 'tipos', stem: 'Verdadeiro ou falso: bactérias não têm material genético, pois não têm núcleo.', ans: 1, opts: [[TF[0], 'Não ter núcleo não significa não ter DNA.'], [TF[1], '']],
+    explain: 'Falso. Bactérias têm DNA, mas ele fica no nucleoide, uma região do citoplasma sem membrana ao redor.' },
+  { type: 'img', topic: 'tipos', stem: 'Observe a célula. O DNA (em roxo, no centro) não está envolvido por membrana. Essa célula é:', fig: ['#s-proc', '0 0 300 170', '420px', 'Célula em forma de bastão com parede, membrana, DNA solto no citoplasma, ribossomos e flagelo'], ans: 0,
+    opts: [['Procarionte', ''], ['Eucarionte animal', 'Eucariontes guardam o DNA dentro de um núcleo com membrana.'], ['Eucarionte vegetal', 'Plantas são eucariontes; o DNA fica no núcleo.'], ['Fungo', 'Fungos são eucariontes.']],
+    explain: 'DNA solto no nucleoide, sem envoltório nuclear, parede celular e ribossomos pequenos espalhados: é um procarionte, como uma bactéria.' },
+  { type: 'mc', topic: 'tipos', stem: 'Qual estrutura é encontrada tanto em bactérias quanto em células animais?', ans: 0,
+    opts: [['Ribossomo', ''], ['Núcleo delimitado por membrana', 'Bactérias não têm núcleo delimitado por membrana.'], ['Mitocôndria', 'Mitocôndrias são organelas membranosas, ausentes nas bactérias.'], ['Complexo golgiense', 'O Golgi é membranoso e só existe em eucariontes.']],
+    explain: 'Ribossomos não têm membrana e existem em todas as células, porque toda célula precisa fazer proteínas.' },
+  { type: 'match', topic: 'reinos', stem: 'Associe cada característica ao tipo de célula.',
+    pairs: [['Parede de celulose', 'Célula vegetal'], ['Parede de quitina', 'Célula de fungo'], ['Sem parede celular', 'Célula animal'], ['Sem núcleo delimitado por membrana', 'Bactéria']],
+    explain: 'Planta: parede de celulose. Fungo: parede de quitina. Animal: sem parede. Bactéria: procarionte, sem núcleo delimitado.' },
+  { type: 'mc', topic: 'organelas', stem: 'Uma pessoa usa um medicamento por muito tempo, e as células do seu fígado passam a ter uma organela muito mais desenvolvida, ligada à desintoxicação. Qual?', ans: 2,
+    opts: [['RER', 'O RER está ligado principalmente a proteínas.'], ['Lisossomo', 'Lisossomos digerem materiais; a desintoxicação de medicamentos é função do REL.'], ['REL', ''], ['Ribossomo', 'Ribossomos produzem proteínas.']],
+    explain: 'O REL, além de produzir lipídios, participa da desintoxicação. Nas células do fígado ele fica mais desenvolvido quando há uso contínuo de certos medicamentos ou álcool.' },
+  { type: 'img', topic: 'organelas', stem: 'Esta estrutura é formada por sacos achatados empilhados, com vesículas nas bordas. Ela recebe vesículas do RER. É o:', fig: ['#s-golgi', '0 0 110 90', '200px', 'Pilha de sacos achatados e curvos com vesículas nas bordas'], ans: 1,
+    opts: [['Retículo endoplasmático liso', 'O REL é uma rede de tubos, não uma pilha de sacos.'], ['Complexo golgiense', ''], ['Lisossomo', 'O lisossomo é uma vesícula arredondada com enzimas.'], ['Núcleo', 'O núcleo é arredondado e envolvido por membrana dupla.']],
+    explain: 'Pilha de cisternas achatadas + vesículas = complexo golgiense.' },
+  { type: 'img', topic: 'organelas', stem: 'Os pontinhos presos à superfície desta estrutura são ribossomos. A estrutura é o:', fig: ['#s-rer', '0 0 124 76', '240px', 'Sacos achatados e ondulados cobertos por pequenos grânulos'], ans: 0,
+    opts: [['Retículo endoplasmático rugoso', ''], ['Retículo endoplasmático liso', 'O liso não tem ribossomos na superfície: por isso é “liso”.'], ['Complexo golgiense', 'O Golgi não tem ribossomos aderidos.'], ['Mitocôndria', 'A mitocôndria tem membrana dupla com dobras internas, sem ribossomos por fora.']],
+    explain: 'Ribossomos aderidos à membrana = rugoso. Rugoso → Ribossomos → pRoteínas.' },
+  { type: 'match', topic: 'organelas', stem: 'Associe cada organela à sua função principal.',
+    pairs: [['Ribossomo', 'Síntese de proteínas'], ['REL', 'Síntese de lipídios'], ['Complexo golgiense', 'Modifica, empacota e direciona'], ['Lisossomo', 'Digestão intracelular']],
+    explain: 'Ribossomo → proteínas. REL → lipídios. Golgi → modifica, organiza, empacota e direciona. Lisossomo → digestão e reciclagem.' },
+  { type: 'mc', topic: 'viagem', stem: 'Qual é o caminho de uma proteína que será secretada (exportada) pela célula?', ans: 3,
+    opts: [['Golgi → ribossomo → RER → membrana', 'O Golgi recebe a proteína do RER; não vem antes dele.'], ['REL → lisossomo → Golgi → membrana', 'REL e lisossomo não fazem parte desse caminho.'], ['Ribossomo → Golgi → RER → membrana', 'A proteína passa pelo RER antes do Golgi.'], ['Ribossomo no RER → RER → vesícula → Golgi → vesícula → membrana', '']],
+    explain: 'O ribossomo preso ao RER monta a proteína, que entra no RER, segue em vesícula ao Golgi, é modificada e empacotada e sai em outra vesícula que se funde à membrana.' },
+  { type: 'tf', topic: 'organelas', stem: 'Verdadeiro ou falso: o lisossomo tem esse nome porque sua superfície é lisa.', ans: 1, opts: [[TF[0], 'Parece lógico pelo som, mas “liso” aqui não tem a ver com superfície.'], [TF[1], '']],
+    explain: 'Falso. “Lise” significa quebra, dissolução. Lisossomo é o “corpo que quebra”: faz a digestão intracelular. Liso, sem ribossomos, é o REL.' },
+  { type: 'mc', topic: 'passivo', stem: 'Uma molécula atravessou a membrana através de uma proteína, indo da região de maior para menor concentração e sem gasto de ATP. O processo foi:', ans: 2,
+    opts: [['Osmose', 'Osmose é o movimento de água.'], ['Transporte ativo', 'Foi de maior para menor e sem ATP: é passivo.'], ['Difusão facilitada', ''], ['Difusão simples', 'É passivo, mas houve proteína. Na simples, a passagem é direta pela bicamada.']],
+    explain: 'Passivo (maior → menor, sem ATP) + proteína de membrana = difusão facilitada.' },
+  { type: 'tf', topic: 'passivo', stem: 'Verdadeiro ou falso: na difusão simples, a célula gasta ATP para empurrar as moléculas através da membrana.', ans: 1, opts: [[TF[0], 'A difusão é passiva: as moléculas se espalham sozinhas, pelo próprio movimento.'], [TF[1], '']],
+    explain: 'Falso. A difusão simples é passiva: acontece a favor do gradiente, sem gasto de ATP.' },
+  { type: 'tf', topic: 'passivo', stem: 'Verdadeiro ou falso: na membrana plasmática, as caudas dos fosfolipídios ficam voltadas para o interior da bicamada, longe da água.', ans: 0, opts: [[TF[0], ''], [TF[1], 'As caudas são hidrofóbicas (repelem a água), então ficam escondidas no meio da bicamada.']],
+    explain: 'Verdadeiro. As cabeças, hidrofílicas, ficam voltadas para a água de dentro e de fora; as caudas, hidrofóbicas, ficam no interior.' },
+  { type: 'mc', topic: 'osmose', stem: 'Folhas de alface temperadas com sal murcham depois de algum tempo. A melhor explicação é:', ans: 0,
+    opts: [['As células perderam água por osmose, porque o meio ficou hipertônico', ''], ['O sal entrou nas células e as destruiu por transporte ativo', 'O murchamento é explicado pela saída de água, não pela entrada de sal.'], ['A água entrou nas células, que estouraram', 'Se a água entrasse, a célula ficaria túrgida (firme), não murcha.'], ['As células gastaram ATP para expulsar a água', 'Osmose é passiva, sem gasto direto de ATP.']],
+    explain: 'O sal deixa o meio externo hipertônico. A água sai das células por osmose, os vacúolos diminuem e ocorre plasmólise: a folha murcha.' },
+  { type: 'mc', topic: 'osmose', stem: 'Uma célula vegetal é colocada em água pura (meio hipotônico). O que acontece?', ans: 3,
+    opts: [['Murcha e sofre plasmólise', 'Isso ocorre em meio hipertônico.'], ['Estoura, como uma hemácia', 'A parede celular impede o rompimento.'], ['Nada, porque plantas não fazem osmose', 'Todas as células fazem osmose.'], ['Ganha água e fica túrgida, sem estourar, por causa da parede', '']],
+    explain: 'A água entra, o vacúolo enche e a célula pressiona a parede, ficando túrgida. A parede resiste e impede que ela estoure.' },
+  { type: 'mc', topic: 'ativo', stem: 'Um processo move íons do lado de MENOR para o lado de MAIOR concentração. Sobre ele, é correto dizer que:', ans: 1,
+    opts: [['É difusão facilitada, pois usa proteína', 'A facilitada só ocorre a favor do gradiente, de maior para menor.'], ['É transporte ativo e requer energia', ''], ['É osmose, pois envolve concentração', 'Osmose é movimento de água, não de íons.'], ['Ocorre sem gasto de energia', 'Ir contra o gradiente sempre exige energia.']],
+    explain: 'Contra o gradiente (menor → maior) = transporte ativo, com gasto de energia. Exemplo: bomba de sódio e potássio.' }
+];
+const KEY = 'celula.v1.sim';
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const MATCH_ORDER = Q.map(q => q.type === 'match' ? shuffle(q.pairs.map(p => p[1])) : null);
+function isRight(q, a) { if (a == null) return false; if (q.type === 'match') return q.pairs.every((p, i) => a[i] === p[1]); return a === q.ans; }
+function ansText(q, a) { if (q.type === 'match') return q.pairs.map((p, i) => `${p[0]} → ${(a && a[i]) || '—'}`).join('; '); return a == null ? '—' : q.opts[a][0]; }
+function rightText(q) { if (q.type === 'match') return q.pairs.map(p => `${p[0]} → ${p[1]}`).join('; '); return q.opts[q.ans][0]; }
+class Component extends DCLogic {
+  state = { i: 0, draft: {}, answers: {}, done: false, reviewing: false };
+  componentDidMount() { try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) this.setState({ ...s, draft: {}, reviewing: false }); } catch (e) {} }
+  save(p) { try { const s = { ...this.state, ...p }; localStorage.setItem(KEY, JSON.stringify({ i: s.i, answers: s.answers, done: s.done })); } catch (e) {} }
+  set(p) { this.setState(p); this.save(p); }
+  renderVals() {
+    const { i, draft, answers, done, reviewing } = this.state, q = Q[i], L = 'ABCD';
+    const confirmed = answers[i] !== undefined, cur = confirmed ? answers[i] : draft[i];
+    const right = confirmed && isRight(q, answers[i]);
+    const opts = (q.opts || []).map(([t], k) => {
+      const sel = cur === k; let border = sel ? 'var(--accent)' : 'var(--line2)', bg = sel ? 'color-mix(in oklch, var(--accent) 12%, transparent)' : 'transparent', mark = '', markColor = 'var(--muted)', bw = sel ? '2px' : '1px';
+      if (confirmed && k === q.ans) { border = 'var(--ok)'; bg = 'color-mix(in oklch, var(--ok) 10%, transparent)'; mark = '✓ Correta'; markColor = 'var(--ok)'; bw = '2px'; }
+      else if (confirmed && sel) { border = 'var(--bad)'; bg = 'color-mix(in oklch, var(--bad) 9%, transparent)'; mark = '✗ Sua resposta'; markColor = 'var(--bad)'; }
+      return { t, letter: L[k], sel, border, bg, bw, mark, markColor, disabled: confirmed, hover: confirmed || sel ? bg : 'var(--hover)', pick: () => this.setState(s => ({ draft: { ...s.draft, [i]: k } })) };
+    });
+    const rows = q.type === 'match' ? q.pairs.map((p, r) => {
+      const v = (cur && cur[r]) || '', ok = confirmed && v === p[1];
+      return { left: p[0], value: v, disabled: confirmed, border: confirmed ? (ok ? 'var(--ok)' : 'var(--bad)') : 'var(--line2)', bw: confirmed ? '2px' : '1px',
+        mark: confirmed ? (ok ? '✓' : '✗ → ' + p[1]) : '', markColor: ok ? 'var(--ok)' : 'var(--bad)',
+        choices: [{ v: '', t: 'Escolha…' }, ...MATCH_ORDER[i].map(t => ({ v: t, t }))],
+        change: (e) => { const val = e.target.value; this.setState(s => { const d = [...((s.draft[i]) || [])]; d[r] = val; return { draft: { ...s.draft, [i]: d } }; }); } };
+    }) : [];
+    const canConfirm = q.type === 'match' ? !!(cur && q.pairs.every((_, r) => cur[r])) : cur !== undefined;
+    const total = Q.length, nRight = Q.filter((qq, k) => isRight(qq, answers[k])).length;
+    const byT = {}; Q.forEach((qq, k) => { const t = byT[qq.topic] = byT[qq.topic] || { r: 0, n: 0 }; t.n++; if (isRight(qq, answers[k])) t.r++; });
+    const tl = Object.keys(byT).map(k => ({ name: TOPICS[k][0], href: TOPICS[k][1], frac: `${byT[k].r}/${byT[k].n}`, ok: byT[k].r / byT[k].n >= 0.7 }));
+    const errors = Q.map((qq, k) => ({ qq, k })).filter(({ qq, k }) => !isRight(qq, answers[k])).map(({ qq, k }) => ({
+      n: k + 1, topic: TOPICS[qq.topic][0], stem: qq.stem, yours: ansText(qq, answers[k]), right: rightText(qq), explain: qq.explain, href: TOPICS[qq.topic][1] }));
+    const good = tl.filter(t => t.ok), bad = tl.filter(t => !t.ok), pctN = Math.round(nRight / total * 100);
+    const chosenWhy = confirmed && !right && q.type !== 'match' ? q.opts[answers[i]][1] : '';
+    return {
+      inQuiz: !done, inResult: done, num: i + 1, total, pct: ((i + (confirmed ? 1 : 0)) / total * 100) + '%',
+      typeLabel: { mc: 'Múltipla escolha', tf: 'Verdadeiro ou falso', img: 'Interprete a imagem', match: 'Associação' }[q.type], topicLabel: TOPICS[q.topic][0],
+      stem: q.stem, hasFig: !!q.fig, figSym: q.fig ? q.fig[0] : '', figVb: q.fig ? q.fig[1] : '0 0 10 10', figMax: q.fig ? q.fig[2] : '0', figAlt: q.fig ? q.fig[3] : '',
+      isChoice: q.type !== 'match', isMatch: q.type === 'match', opts, rows, confirmed,
+      showConfirm: !confirmed, cantConfirm: !canConfirm, confirmOp: canConfirm ? 1 : 0.45,
+      fbTitle: right ? 'Correto.' : 'Incorreto.', fbColor: right ? 'var(--ok)' : 'var(--bad)', chosenWhy, hasChosenWhy: !!chosenWhy, explain: q.explain,
+      nextLabel: i === total - 1 ? 'Ver resultado' : 'Próxima questão →',
+      confirm: () => { if (!canConfirm) return; this.set({ answers: { ...answers, [i]: cur } }); },
+      next: () => { if (i === total - 1) this.set({ done: true }); else this.set({ i: i + 1 }); },
+      pctScore: pctN + '%', scoreText: `Você acertou ${nRight} de ${total} questões.`,
+      good, bad, noGood: good.length === 0, noBad: bad.length === 0, hasErrors: errors.length > 0, errors, reviewing,
+      openReview: () => this.setState({ reviewing: true }),
+      restart: () => this.set({ i: 0, draft: {}, answers: {}, done: false, reviewing: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

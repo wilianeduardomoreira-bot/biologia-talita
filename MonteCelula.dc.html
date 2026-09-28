@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-noprint="" style="margin:28px 0;max-width:720px">
+  <p style="margin:0 0 4px;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Monte a célula</p>
+  <p style="margin:0 0 14px;font:400 16px/1.5 var(--fb)">{{ instr }}</p>
+  <div role="group" aria-label="Nomes das estruturas" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+      <button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.sel }}" style="min-height:44px;padding:8px 14px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font:600 16px/1 var(--fh);letter-spacing:.02em;cursor:pointer;opacity:{{ c.op }};text-decoration:{{ c.deco }}">{{ c.name }}</button>
+    </sc-for>
+  </div>
+  <div class="blueprint" style="padding:16px 10px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <dc-import name="CellMap" markers="{{ markers }}" hint-size="100%,300px"></dc-import>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+    <button type="button" onClick="{{ check }}" disabled="{{ cantCheck }}" style="min-height:44px;padding:8px 18px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer;opacity:{{ checkOp }}">Verificar</button>
+    <button type="button" onClick="{{ reset }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer" style-hover="background: var(--hover)">↺ Recomeçar</button>
+  </div>
+  <div aria-live="polite">
+    <sc-if value="{{ checked }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:16px">
+        <p style="font:600 22px/1.15 var(--fh);margin:0 0 8px">{{ resultTitle }}</p>
+        <ul style="margin:0;padding-left:18px;display:grid;gap:6px;font:400 15px/1.5 var(--fb)">
+          <sc-for list="{{ feedback }}" as="f" hint-placeholder-count="2">
+            <li><strong style="color:{{ f.color }}">{{ f.mark }} {{ f.n }}. {{ f.name }}</strong> — {{ f.hint }}</li>
+          </sc-for>
+        </ul>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:760}}">
+const SPOTS = [
+  { n: 1, id: 'nucleo', x: 112, y: 152 }, { n: 2, id: 'rer', x: 224, y: 96 }, { n: 3, id: 'rel', x: 226, y: 226 },
+  { n: 4, id: 'golgi', x: 326, y: 148 }, { n: 5, id: 'liso', x: 133, y: 251 }, { n: 6, id: 'ribo', x: 306, y: 80 }
+];
+const NAMES = { nucleo: 'Núcleo', rer: 'RER', rel: 'REL', golgi: 'Complexo golgiense', liso: 'Lisossomo', ribo: 'Ribossomos' };
+const SHORT = { nucleo: 'Núcleo', rer: 'RER', rel: 'REL', golgi: 'Golgi', liso: 'Liso', ribo: 'Ribo' };
+const HINTS = {
+  nucleo: 'a maior estrutura, com envoltório duplo e o DNA dentro.',
+  rer: 'sacos achatados cobertos de pontinhos: os ribossomos.',
+  rel: 'tubos lisos, sem pontinhos, ligados ao RER.',
+  golgi: 'pilha de sacos curvos com vesículas saindo das bordas.',
+  liso: 'bolsinha cheia de enzimas (pontos), espalhada no citoplasma.',
+  ribo: 'grãos minúsculos, soltos no citoplasma.'
+};
+class Component extends DCLogic {
+  state = { sel: null, assign: {}, checked: false };
+  renderVals() {
+    const { sel, assign, checked } = this.state;
+    const used = Object.values(assign);
+    const chips = ['golgi', 'ribo', 'nucleo', 'liso', 'rer', 'rel'].map(id => {
+      const on = sel === id, isUsed = used.includes(id);
+      return { name: NAMES[id], sel: on, border: on ? 'var(--accent)' : 'var(--line2)', bg: on ? 'var(--accent)' : 'transparent',
+        fg: on ? 'var(--on-accent)' : 'var(--ink)', op: isUsed && !on ? 0.5 : 1, deco: 'none',
+        pick: () => this.setState({ sel: on ? null : id, checked: false }) };
+    });
+    const markers = SPOTS.map(s => {
+      const a = assign[s.n], ok = a === s.id;
+      const ring = checked ? (ok ? 'var(--ok)' : 'var(--bad)') : a ? 'var(--accent)' : 'var(--ink)';
+      return { x: s.x, y: s.y, text: a ? (checked ? (ok ? '✓ ' : '✗ ') : '') + SHORT[a] : String(s.n), ring,
+        bg: a ? 'var(--bg)' : 'var(--ink)', fg: a ? 'var(--ink)' : 'var(--bg)',
+        aria: `Posição ${s.n}` + (a ? `: ${NAMES[a]}` : ', vazia') + (checked ? (ok ? ', correta' : ', incorreta') : ''),
+        onClick: () => {
+          if (!this.state.sel) return;
+          const na = { ...this.state.assign };
+          Object.keys(na).forEach(k => { if (na[k] === this.state.sel) delete na[k]; });
+          na[s.n] = this.state.sel; this.setState({ assign: na, sel: null, checked: false });
+        } };
+    });
+    const nOk = SPOTS.filter(s => assign[s.n] === s.id).length;
+    const feedback = SPOTS.map(s => ({ n: s.n, name: NAMES[s.id], color: assign[s.n] === s.id ? 'var(--ok)' : 'var(--bad)', mark: assign[s.n] === s.id ? '✓' : '✗', hint: HINTS[s.id] }));
+    const filled = Object.keys(assign).length;
+    return {
+      chips, markers, checked, feedback, cantCheck: filled === 0, checkOp: filled === 0 ? 0.45 : 1,
+      instr: sel ? `Agora toque no número onde fica: ${NAMES[sel]}.` : 'Toque num nome e depois no número correspondente na célula. Os rótulos foram retirados: use a forma de cada estrutura.',
+      resultTitle: nOk === 6 ? 'Todas certas. Você já reconhece as estruturas pela forma.' : `${nOk} de 6 no lugar certo. Veja as pistas:`,
+      check: () => this.setState({ checked: true }),
+      reset: () => this.setState({ sel: null, assign: {}, checked: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

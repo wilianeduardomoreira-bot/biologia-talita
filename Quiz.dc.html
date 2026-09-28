@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-noprint="" style="margin:40px 0 8px;padding-top:20px;border-top:1px dashed var(--line2);max-width:720px">
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font:600 13px/1.2 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+    <span>Teste rápido</span><span style="color:var(--muted);letter-spacing:.06em">· {{ tag }}</span>
+  </div>
+  <p style="font:500 18px/1.45 var(--fb);margin:12px 0 16px;text-wrap:pretty">{{ stem }}</p>
+  <div role="group" aria-label="Alternativas" style="display:grid;gap:8px">
+    <sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+      <button type="button" onClick="{{ o.pick }}" disabled="{{ o.disabled }}" aria-label="{{ o.aria }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;min-height:48px;padding:12px 14px;border:1px solid {{ o.border }};border-width:{{ o.bw }};background:{{ o.bg }};color:var(--ink);font:400 16px/1.4 var(--fb);cursor:{{ o.cursor }};opacity:1" style-hover="background: {{ o.hover }}">
+        <span style="flex:none;width:22px;font:600 17px/1.35 var(--fh);color:var(--accent-ink)">{{ o.letter }}</span>
+        <span style="flex:1;min-width:0">{{ o.t }}</span>
+        <span style="flex:none;font:600 12px/1.9 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:{{ o.markColor }}">{{ o.mark }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div aria-live="polite">
+    <sc-if value="{{ answered }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:16px;padding:16px 18px;border:1px solid {{ fbColor }};font:400 16px/1.55 var(--fb)">
+        <p style="font:600 22px/1.15 var(--fh);margin:0 0 8px;color:{{ fbColor }}">{{ fbTitle }}</p>
+        <sc-if value="{{ wrong }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0 0 10px">Você escolheu <strong>{{ chosenText }}</strong>. {{ chosenWhy }}</p>
+        </sc-if>
+        <p style="margin:0 0 10px;text-wrap:pretty">{{ explain }}</p>
+        <sc-if value="{{ hasOthers }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:12px 0 4px;font:600 13px/1.2 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Por que as outras não</p>
+          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px;color:var(--muted)">
+            <sc-for list="{{ others }}" as="x" hint-placeholder-count="2">
+              <li><strong style="color:var(--ink)">{{ x.t }}:</strong> {{ x.why }}</li>
+            </sc-for>
+          </ul>
+        </sc-if>
+        <button type="button" onClick="{{ retry }}" style="margin-top:14px;min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 15px/1 var(--fh);letter-spacing:.04em;cursor:pointer" style-hover="background: var(--hover)">Tentar de novo</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:520},&quot;qid&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;q1&quot;,&quot;q2&quot;,&quot;q3&quot;,&quot;q4&quot;,&quot;q5&quot;,&quot;q6&quot;,&quot;q7&quot;,&quot;q8&quot;,&quot;q9&quot;,&quot;q10&quot;,&quot;q11&quot;,&quot;q12&quot;,&quot;q13&quot;],&quot;default&quot;:&quot;q9&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const QUIZ = {
+  q1: { tag: 'Anatomia básica', stem: 'Quais estruturas estão presentes em praticamente todas as células, das bactérias aos neurônios?', ans: 0,
+    opts: [['Membrana plasmática, citoplasma e material genético (DNA)', ''],
+      ['Parede celular, núcleo e cloroplastos', 'Células animais não têm parede nem cloroplastos, e bactérias não têm núcleo.'],
+      ['Núcleo, mitocôndrias e vacúolo central', 'Bactérias não têm núcleo nem mitocôndrias, e o grande vacúolo central é típico de células vegetais.'],
+      ['Membrana plasmática, parede celular e cloroplastos', 'A membrana está em todas, mas parede e cloroplastos não existem na célula animal.']],
+    explain: 'Toda célula tem uma fronteira (membrana plasmática), um interior (citoplasma) e instruções genéticas (DNA). O que muda entre os tipos de célula é onde esse DNA fica e quais outras estruturas existem.' },
+  q2: { tag: 'Procarionte × Eucarionte', stem: 'Ao microscópio eletrônico, uma célula mostra o DNA concentrado numa região do citoplasma, sem nenhuma membrana ao redor. Essa célula é:', ans: 1,
+    opts: [['De um animal', 'Células animais são eucariontes: o DNA fica dentro de um núcleo delimitado por membrana.'],
+      ['Procarionte, como uma bactéria', ''],
+      ['De uma planta', 'Células vegetais também são eucariontes, com DNA dentro do núcleo.'],
+      ['De um fungo', 'Fungos são eucariontes; têm núcleo delimitado por membrana.']],
+    explain: 'DNA sem membrana ao redor, numa região chamada nucleoide, é a marca dos procariontes. A pergunta-chave é sempre: onde está o DNA?' },
+  q3: { tag: 'Procarionte × Eucarionte', stem: 'Verdadeiro ou falso: bactérias têm ribossomos.', ans: 0,
+    opts: [['Verdadeiro', ''],
+      ['Falso', 'Bactérias não têm organelas membranosas, mas o ribossomo não tem membrana. Sem ribossomos, nenhuma célula conseguiria produzir proteínas.']],
+    explain: 'Verdadeiro. O ribossomo não é envolvido por membrana e existe em todas as células, inclusive nas bactérias, porque toda célula precisa produzir proteínas.' },
+  q4: { tag: 'Animal, vegetal e fungos', stem: 'Uma célula tem núcleo, parede celular e mitocôndrias, não tem cloroplastos e armazena glicogênio. O mais provável é que seja de:', ans: 2,
+    opts: [['Uma planta', 'Plantas armazenam amido, não glicogênio, e sua parede é de celulose. Não ter cloroplasto não basta para descartar planta: células de raiz também não têm.'],
+      ['Um animal', 'Células animais não têm parede celular.'],
+      ['Um fungo', ''],
+      ['Uma bactéria', 'Bactérias não têm núcleo delimitado por membrana nem mitocôndrias.']],
+    explain: 'Parede celular + ausência de cloroplastos + reserva de glicogênio é a combinação típica dos fungos. A parede deles é formada principalmente por quitina.' },
+  q5: { tag: 'Organelas', stem: 'Qual estrutura monta as proteínas, unindo aminoácidos na ordem indicada pelo RNA mensageiro?', ans: 1,
+    opts: [['Lisossomo', 'O lisossomo faz quase o contrário: quebra (digere) moléculas, inclusive proteínas.'],
+      ['Ribossomo', ''],
+      ['Retículo endoplasmático liso', 'O REL não tem ribossomos; está ligado principalmente à produção de lipídios.'],
+      ['Complexo golgiense', 'O Golgi modifica, empacota e direciona proteínas que já foram produzidas; ele não as monta.']],
+    explain: 'O ribossomo realiza a síntese de proteínas. Ele pode estar livre no citoplasma ou preso à membrana do RER.' },
+  q6: { tag: 'Viagem da proteína', stem: 'Células do pâncreas produzem e exportam grandes quantidades de enzimas digestivas, que são proteínas. Qual estrutura, com ribossomos presos à superfície, deve ser muito desenvolvida nessas células?', ans: 1,
+    opts: [['REL', 'O REL não tem ribossomos e está mais ligado a lipídios e à desintoxicação.'],
+      ['RER', ''],
+      ['Lisossomo', 'Lisossomos digerem materiais dentro da célula; não produzem proteínas para exportação.'],
+      ['Cloroplasto', 'Cloroplastos realizam fotossíntese e não existem em células animais.']],
+    explain: 'Proteínas que serão exportadas são feitas por ribossomos presos ao RER, entram no retículo e seguem para o Golgi. Uma célula que secreta muita proteína tem RER (e Golgi) bem desenvolvidos.' },
+  q7: { tag: 'Membrana plasmática', stem: 'A membrana plasmática é chamada de seletivamente permeável porque:', ans: 1,
+    opts: [['Impede a passagem de qualquer substância', 'Se nada passasse, a célula não receberia nutrientes nem eliminaria resíduos.'],
+      ['Deixa algumas substâncias passarem com facilidade e dificulta ou impede a passagem de outras', ''],
+      ['Só deixa passar água', 'Gases como O₂ e CO₂, íons e glicose também atravessam, cada um do seu jeito.'],
+      ['Deixa tudo passar livremente', 'Assim ela não controlaria as trocas, que é justamente a sua função.']],
+    explain: 'Seletiva = que seleciona. Moléculas pequenas e sem carga, como O₂ e CO₂, atravessam a bicamada com facilidade; íons e moléculas como a glicose dependem de proteínas de membrana.' },
+  q8: { tag: 'Difusão simples', stem: 'Nos alvéolos dos pulmões, o gás oxigênio passa diretamente pela bicamada de fosfolipídios, da região onde está mais concentrado para onde está menos concentrado. Isso é:', ans: 2,
+    opts: [['Transporte ativo', 'Não há gasto de energia e o O₂ vai a favor do gradiente, de maior para menor concentração.'],
+      ['Osmose', 'Osmose é o movimento de água. Aqui a substância que se move é o oxigênio.'],
+      ['Difusão simples', ''],
+      ['Difusão facilitada', 'Na facilitada é preciso uma proteína de membrana. O O₂ atravessa direto pela bicamada.']],
+    explain: 'Maior → menor, sem ATP e sem proteína transportadora: difusão simples. O₂ e CO₂ são moléculas pequenas e apolares, que passam entre os fosfolipídios.' },
+  q9: { tag: 'Difusão facilitada', stem: 'Uma molécula atravessou a membrana através de uma proteína, indo da região de maior para menor concentração e sem gasto de ATP. O processo foi:', ans: 2,
+    opts: [['Osmose', 'Osmose é o movimento de ÁGUA através da membrana. O enunciado fala de uma molécula passando por uma proteína.'],
+      ['Transporte ativo', 'Mas observe: a substância está indo de MAIOR para MENOR concentração e não houve gasto de ATP. Portanto estamos diante de transporte passivo.'],
+      ['Difusão facilitada', ''],
+      ['Difusão simples', 'Quase: é passivo (maior → menor, sem ATP), mas houve participação de uma proteína. Na difusão simples a molécula atravessa direto pela bicamada.']],
+    explain: 'Maior → menor e sem ATP: transporte passivo. Como houve participação de uma proteína de membrana → DIFUSÃO FACILITADA.' },
+  q10: { tag: 'Osmose', stem: 'Hemácias colocadas em água destilada incham e podem se romper. Em relação ao interior da hemácia, a água destilada é um meio:', ans: 2,
+    opts: [['Hipertônico', 'Num meio hipertônico a água sairia da célula, e ela murcharia.'],
+      ['Isotônico', 'No meio isotônico a entrada e a saída de água se equilibram; o volume não muda.'],
+      ['Hipotônico', ''],
+      ['Sem relação: água destilada não provoca osmose', 'Provoca, sim: a diferença de concentração de solutos entre dentro e fora é o que gera o fluxo de água.']],
+    explain: 'Água destilada praticamente não tem solutos: é hipotônica em relação ao interior da hemácia. A água entra por osmose mais do que sai, e a célula, que não tem parede, pode se romper (hemólise).' },
+  q11: { tag: 'Transporte ativo', stem: 'A bomba de sódio e potássio leva íons de sódio (Na⁺) para fora da célula, onde eles já estão mais concentrados. O que é indispensável para isso acontecer?', ans: 0,
+    opts: [['Gasto de energia, fornecida pelo ATP', ''],
+      ['Nada: os íons vão sozinhos para o lado mais concentrado', 'Sozinhas, as partículas tendem a ir do lado mais concentrado para o menos concentrado. Ir no sentido contrário exige energia.'],
+      ['Uma diferença de concentração de água', 'Isso descreve a osmose, que é passiva e envolve água.'],
+      ['Apenas a bicamada de fosfolipídios', 'Íons não atravessam a bicamada com facilidade; a bomba é uma proteína de membrana.']],
+    explain: 'Levar uma substância do lado de menor para o de maior concentração é ir contra o gradiente, como subir uma ladeira. A bomba de Na⁺/K⁺ usa a energia do ATP para isso.' },
+  q12: { tag: 'Compare', stem: 'Qual destes processos NÃO é um tipo de transporte passivo?', ans: 2,
+    opts: [['Osmose', 'Osmose é passiva: a água se move sem gasto direto de ATP.'],
+      ['Difusão facilitada', 'Usa proteína, mas continua passiva: maior → menor, sem ATP.'],
+      ['Transporte ativo', ''],
+      ['Difusão simples', 'É passiva: maior → menor, sem ATP.']],
+    explain: 'Passivos: difusão simples, difusão facilitada e osmose. O transporte ativo é o único que gasta energia e pode levar substâncias contra o gradiente.' },
+  q13: { tag: 'Revisão espaçada', stem: 'Uma célula precisa aumentar intensamente sua produção de proteínas. Qual estrutura estará diretamente envolvida na montagem dessas proteínas?', ans: 0,
+    opts: [['Ribossomo', ''],
+      ['Lisossomo', 'Lisossomos digerem e reciclam; não produzem proteínas.'],
+      ['REL', 'O REL não tem ribossomos e produz principalmente lipídios.'],
+      ['Vacúolo', 'Vacúolos armazenam água e substâncias; não fabricam proteínas.']],
+    explain: 'Quem monta proteínas é o ribossomo. Se a proteína for exportada, RER e Golgi também trabalham mais, mas a montagem acontece sempre no ribossomo.' }
+};
+class Component extends DCLogic {
+  state = { chosen: null };
+  key() { return 'celula.v1.q.' + (this.props.qid || 'q1'); }
+  componentDidMount() {
+    try { const v = localStorage.getItem(this.key()); if (v !== null) this.setState({ chosen: +v }); } catch (e) {}
+  }
+  pick(i) {
+    if (this.state.chosen !== null) return;
+    this.setState({ chosen: i });
+    try { localStorage.setItem(this.key(), String(i)); } catch (e) {}
+  }
+  renderVals() {
+    const q = QUIZ[this.props.qid] || QUIZ.q1;
+    const c = this.state.chosen, answered = c !== null, L = 'ABCDEF';
+    const opts = q.opts.map(([t], i) => {
+      const isAns = i === q.ans, isChosen = i === c;
+      let border = 'var(--line2)', bg = 'transparent', mark = '', markColor = 'var(--muted)', bw = '1px';
+      if (answered && isAns) { border = 'var(--ok)'; bg = 'color-mix(in oklch, var(--ok) 10%, transparent)'; mark = '✓ Correta'; markColor = 'var(--ok)'; bw = '2px'; }
+      else if (answered && isChosen) { border = 'var(--bad)'; bg = 'color-mix(in oklch, var(--bad) 9%, transparent)'; mark = '✗ Sua resposta'; markColor = 'var(--bad)'; bw = '2px'; }
+      return { t, letter: L[i], border, bg, bw, mark, markColor, disabled: answered, cursor: answered ? 'default' : 'pointer',
+        hover: answered ? bg : 'var(--hover)', aria: L[i] + ') ' + t + (mark ? ' — ' + mark : ''), pick: () => this.pick(i) };
+    });
+    const right = answered && c === q.ans;
+    const others = answered ? q.opts.map(([t, why], i) => ({ t, why, i })).filter(o => o.i !== q.ans && o.i !== c && o.why) : [];
+    return {
+      tag: q.tag, stem: q.stem, opts, answered, wrong: answered && !right,
+      fbTitle: right ? 'Isso mesmo.' : 'Ainda não. Veja o raciocínio:',
+      fbColor: right ? 'var(--ok)' : 'var(--bad)',
+      chosenText: answered ? q.opts[c][0] : '', chosenWhy: answered ? q.opts[c][1] : '',
+      explain: q.explain, others, hasOthers: others.length > 0,
+      retry: () => { this.setState({ chosen: null }); try { localStorage.removeItem(this.key()); } catch (e) {} }
+    };
+  }
+}
+</script>
+</body>
+</html>

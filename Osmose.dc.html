@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @keyframes osmIn { 0% { transform: translateX(0); opacity: 0 } 25% { opacity: 1 } 100% { transform: translateX(-26px); opacity: 0 } }
+    @keyframes osmOut { 0% { transform: translateX(0); opacity: 0 } 25% { opacity: 1 } 100% { transform: translateX(26px); opacity: 0 } }
+  </style>
+</helmet>
+<figure data-noprint="" style="margin:24px 0;max-width:720px">
+  <div style="display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-bottom:14px">
+    <div role="group" aria-label="Tipo de célula" style="display:inline-flex;border:1px solid var(--line2)">
+      <button type="button" onClick="{{ setAnimal }}" aria-pressed="{{ isAnimal }}" style="min-height:44px;padding:8px 14px;border:0;background:{{ bgAnimal }};color:{{ fgAnimal }};font:600 15px/1 var(--fh);letter-spacing:.03em;cursor:pointer">Hemácia (animal)</button>
+      <button type="button" onClick="{{ setPlanta }}" aria-pressed="{{ isPlanta }}" style="min-height:44px;padding:8px 14px;border:0;border-left:1px solid var(--line2);background:{{ bgPlanta }};color:{{ fgPlanta }};font:600 15px/1 var(--fh);letter-spacing:.03em;cursor:pointer">Célula vegetal</button>
+    </div>
+  </div>
+  <div role="group" aria-label="Meio em que a célula foi colocada" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line2);margin-bottom:14px">
+    <sc-for list="{{ media }}" as="md" hint-placeholder-count="3">
+      <button type="button" onClick="{{ md.pick }}" aria-pressed="{{ md.on }}" style="min-height:52px;padding:8px 6px;border:0;border-left:{{ md.bl }};background:{{ md.bg }};color:{{ md.fg }};font:600 15px/1.1 var(--fh);letter-spacing:.02em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <span>{{ md.name }}</span><span style="font:400 12px/1.2 var(--fb);opacity:.85">{{ md.sub }}</span>
+      </button>
+    </sc-for>
+  </div>
+  <div class="blueprint" style="padding:10px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg viewBox="0 0 320 220" role="img" aria-label="{{ aria }}" style="display:block;width:100%;height:auto">
+      <rect x="4" y="4" width="312" height="212" style="fill:color-mix(in oklch, var(--c-agua) 12%, transparent);stroke:var(--line2)"></rect>
+      <path d="{{ outDots }}" style="fill:var(--ink)"></path>
+      <sc-if value="{{ isAnimal }}" hint-placeholder-val="{{ true }}">
+        <g style="transform: scale({{ scaleA }});transform-origin:160px 110px;transition:transform .8s ease">
+          <path d="{{ cellPath }}" style="fill:color-mix(in oklch, var(--c-liso) 22%, var(--bg));stroke:var(--accent);stroke-width:3.5;transition:d .8s ease"></path>
+          <path d="{{ inDotsA }}" style="fill:var(--ink)"></path>
+        </g>
+      </sc-if>
+      <sc-if value="{{ isPlanta }}" hint-placeholder-val="{{ false }}">
+        <g>
+          <rect x="92" y="48" width="136" height="124" rx="8" style="fill:none;stroke:var(--c-parede);stroke-width:7"></rect>
+          <g style="transform: scale({{ scaleP }});transform-origin:160px 110px;transition:transform .8s ease">
+            <rect x="99" y="55" width="122" height="110" rx="6" style="fill:color-mix(in oklch, var(--c-cloro) 10%, var(--bg));stroke:var(--accent);stroke-width:3"></rect>
+            <rect x="116" y="70" width="88" height="80" rx="18" style="fill:color-mix(in oklch, var(--c-agua) 28%, var(--bg));stroke:var(--c-agua);stroke-width:1.5"></rect>
+            <path d="{{ inDotsP }}" style="fill:var(--ink)"></path>
+            <use href="#s-cloro" x="102" y="58" width="26" height="13"></use>
+            <use href="#s-cloro" x="190" y="150" width="26" height="13"></use>
+            <use href="#s-cloro" x="192" y="58" width="26" height="13"></use>
+          </g>
+        </g>
+      </sc-if>
+      <sc-for list="{{ arrows }}" as="a" hint-placeholder-count="0">
+        <g transform="{{ a.rot }}">
+          <line x1="{{ a.x1 }}" y1="110" x2="{{ a.x2 }}" y2="110" style="stroke:var(--c-agua);stroke-width:2.5;marker-end:{{ a.me }};marker-start:{{ a.ms }}"></line>
+          <g style="animation:{{ a.anim }}">
+            <use href="#s-agua" x="{{ a.dx }}" y="90" width="13" height="13" style="opacity: {{ a.dop }}"></use>
+          </g>
+        </g>
+      </sc-for>
+    </svg>
+  </div>
+  <div aria-live="polite" style="margin-top:14px">
+    <p style="font:600 22px/1.15 var(--fh);margin:0 0 6px">{{ resultTitle }}</p>
+    <p style="font:400 16px/1.55 var(--fb);margin:0;text-wrap:pretty">{{ resultText }}</p>
+  </div>
+  <figcaption style="display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font:400 13px/1.4 var(--fb);color:var(--muted)">
+    <span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-agua"></use></svg>água (atravessa a membrana)</span>
+    <span style="display:inline-flex;align-items:center;gap:6px"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="3" style="fill:var(--ink)"></circle></svg>soluto (nesta simulação, não atravessa)</span>
+    <span>Setas: sentido do fluxo principal de água</span>
+  </figcaption>
+</figure>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:640}}">
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function dotPath(pts) { return pts.map(([x, y]) => `M${(x - 2.6).toFixed(1)} ${y.toFixed(1)}a2.6 2.6 0 1 0 5.2 0a2.6 2.6 0 1 0 -5.2 0`).join(''); }
+const R = rng(7), OUT = [];
+while (OUT.length < 30) { const x = 14 + R() * 292, y = 14 + R() * 192; if (Math.hypot((x - 160) / 1.1, y - 110) > 88) OUT.push([x, y]); }
+const R2 = rng(3), IN = [];
+while (IN.length < 12) { const a = R2() * 6.283, r = Math.sqrt(R2()) * 0.72; IN.push([Math.cos(a) * r, Math.sin(a) * r]); }
+const TEXT = {
+  animal: {
+    hipo: ['A hemácia incha', 'Meio hipotônico: há menos soluto fora do que dentro. A água entra na célula mais do que sai. A hemácia incha e pode se romper (hemólise), porque célula animal não tem parede celular para segurar a pressão.'],
+    iso: ['Nada muda de tamanho', 'Meio isotônico: a concentração de solutos é igual dos dois lados. A água continua passando nos dois sentidos, mas na mesma quantidade. O volume se mantém. Por isso o soro fisiológico é isotônico ao sangue.'],
+    hiper: ['A hemácia murcha', 'Meio hipertônico: há mais soluto fora do que dentro. A água sai da célula mais do que entra, e a hemácia murcha, ficando enrugada (crenada).']
+  },
+  planta: {
+    hipo: ['A célula fica túrgida', 'A água entra, o vacúolo enche e a célula fica túrgida (firme). A parede celular resiste à pressão e impede que a célula estoure. É isso que mantém folhas e caules firmes.'],
+    iso: ['A célula fica flácida', 'Entrada e saída de água se equilibram. Sem água extra pressionando a parede, a célula fica flácida.'],
+    hiper: ['Plasmólise', 'A água sai, o vacúolo diminui e a membrana se descola da parede: é a plasmólise. É por isso que a alface temperada com sal murcha depois de um tempo.']
+  }
+};
+class Component extends DCLogic {
+  state = { cell: 'animal', medium: 'iso' };
+  renderVals() {
+    const { cell, medium } = this.state, animal = cell === 'animal';
+    const nOut = { hipo: 4, iso: 12, hiper: 30 }[medium];
+    const amp = animal && medium === 'hiper' ? 5 : 0, pts = [];
+    for (let i = 0; i < 72; i++) { const a = i / 72 * 6.2832, r = 50 + amp * Math.sin(a * 14); pts.push(`${(160 + Math.cos(a) * r).toFixed(1)} ${(110 + Math.sin(a) * r).toFixed(1)}`); }
+    const dir = medium === 'hipo' ? 'in' : medium === 'hiper' ? 'out' : 'both';
+    const arrows = [0, 90, 180, 270].map(deg => ({
+      rot: `rotate(${deg} 160 110)`,
+      x1: dir === 'in' ? 266 : dir === 'out' ? 230 : 226, x2: dir === 'in' ? 230 : 266, dop: dir === 'both' ? 0 : 1,
+      me: 'url(#arr-agua)', ms: dir === 'both' ? 'url(#arr-agua)' : 'none',
+      dx: dir === 'in' ? 252 : dir === 'out' ? 228 : 240,
+      anim: dir === 'in' ? 'osmIn 1.8s linear infinite' : dir === 'out' ? 'osmOut 1.8s linear infinite' : 'none'
+    }));
+    const on = 'var(--accent)', off = 'transparent';
+    const media = [['hipo', 'Hipotônico', 'menos soluto fora'], ['iso', 'Isotônico', 'igual'], ['hiper', 'Hipertônico', 'mais soluto fora']].map(([id, name, sub], i) => ({
+      name, sub, on: medium === id, bg: medium === id ? on : off, fg: medium === id ? 'var(--on-accent)' : 'var(--ink)',
+      bl: i ? '1px solid var(--line2)' : '0', pick: () => this.setState({ medium: id })
+    }));
+    const [resultTitle, resultText] = TEXT[cell][medium];
+    return {
+      media, isAnimal: animal, isPlanta: !animal,
+      bgAnimal: animal ? on : off, fgAnimal: animal ? 'var(--on-accent)' : 'var(--ink)',
+      bgPlanta: !animal ? on : off, fgPlanta: !animal ? 'var(--on-accent)' : 'var(--ink)',
+      setAnimal: () => this.setState({ cell: 'animal' }), setPlanta: () => this.setState({ cell: 'planta' }),
+      outDots: dotPath(OUT.slice(0, nOut)),
+      inDotsA: dotPath(IN.map(([x, y]) => [160 + x * 50, 110 + y * 50])),
+      inDotsP: dotPath(IN.map(([x, y]) => [160 + x * 38, 110 + y * 34])),
+      cellPath: 'M' + pts.join(' L') + 'Z',
+      scaleA: { hipo: 1.26, iso: 1, hiper: 0.82 }[medium],
+      scaleP: { hipo: 1, iso: 0.93, hiper: 0.56 }[medium],
+      arrows, resultTitle, resultText,
+      aria: `Célula ${animal ? 'animal (hemácia)' : 'vegetal'} em meio ${medium === 'hipo' ? 'hipotônico' : medium === 'iso' ? 'isotônico' : 'hipertônico'}. ${resultTitle}.`
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div data-noprint="" style="max-width:560px;margin:24px auto 0">
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:10px;font:600 13px/1.2 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">
+    <span>Cartão {{ num }} de {{ total }}</span>
+    <span><span style="color:var(--ok)">✓ {{ nOk }} acertei</span> · <span style="color:var(--bad)">↺ {{ nRev }} revisar</span> · {{ nLeft }} sem marca</span>
+  </div>
+  <div style="perspective:1200px">
+    <button type="button" onClick="{{ flip }}" onKeyDown="{{ onKey }}" onTouchStart="{{ ts }}" onTouchEnd="{{ te }}" aria-label="{{ aria }}" style="position:relative;display:block;width:100%;height:300px;padding:0;border:0;background:transparent;cursor:pointer;color:var(--ink);transform-style:preserve-3d;transition:transform .5s ease;transform:rotateY({{ rot }}deg);touch-action:pan-y">
+      <span class="blueprint" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--bg);text-align:center">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span style="font:600 12px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)">{{ cat }}</span>
+        <span style="font:600 clamp(32px,9vw,46px)/1 var(--fh);letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance">{{ front }}</span>
+        <span style="font:400 17px/1.4 var(--fb);color:var(--muted);text-wrap:balance">{{ q }}</span>
+        <span style="position:absolute;bottom:14px;font:600 12px/1 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Toque para virar</span>
+      </span>
+      <span class="blueprint" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);background:color-mix(in oklch, var(--accent) 8%, var(--bg));text-align:left">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">{{ front }}</span>
+        <span style="font:500 19px/1.45 var(--fb);text-wrap:pretty">{{ back }}</span>
+        <sc-if value="{{ hasTip }}" hint-placeholder-val="{{ false }}">
+          <span style="font:600 16px/1.3 var(--fh);letter-spacing:.02em;color:var(--accent-ink)">Macete: {{ tip }}</span>
+        </sc-if>
+      </span>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+    <button type="button" onClick="{{ markRev }}" style="min-height:52px;border:2px solid var(--bad);background:transparent;color:var(--ink);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer" style-hover="background: color-mix(in oklch, var(--bad) 10%, transparent)">↺ Preciso revisar</button>
+    <button type="button" onClick="{{ markOk }}" style="min-height:52px;border:2px solid var(--ok);background:transparent;color:var(--ink);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer" style-hover="background: color-mix(in oklch, var(--ok) 10%, transparent)">✓ Acertei</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+    <button type="button" onClick="{{ prev }}" aria-label="Cartão anterior" style="min-height:44px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">← Anterior</button>
+    <button type="button" onClick="{{ shuffle }}" style="min-height:44px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">⤮ Embaralhar</button>
+    <button type="button" onClick="{{ next }}" aria-label="Próximo cartão" style="min-height:44px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">Próximo →</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+    <button type="button" onClick="{{ toggleRev }}" aria-pressed="{{ onlyRev }}" style="min-height:44px;padding:8px 14px;border:1px solid {{ revBorder }};background:{{ revBg }};color:{{ revFg }};font:600 15px/1 var(--fh);cursor:pointer">{{ revLabel }}</button>
+    <button type="button" onClick="{{ clear }}" style="min-height:44px;padding:8px 14px;border:1px solid var(--line2);background:transparent;color:var(--muted);font:600 15px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">Zerar marcações</button>
+  </div>
+  <p style="margin:10px 0 0;font:400 13px/1.4 var(--fb);color:var(--muted)">Dica: deslize para os lados para trocar de cartão. No teclado, use ← e →.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:560,&quot;height&quot;:600}}">
+const CARDS = [
+  ['tipos', 'Célula', 'Procarionte', 'Qual é sua principal característica?', 'Não tem núcleo delimitado por membrana: o DNA fica numa região do citoplasma chamada nucleoide. Ex.: bactérias.', 'pro = antes; karyon = núcleo'],
+  ['tipos', 'Célula', 'Eucarionte', 'Qual é sua principal característica?', 'Tem núcleo delimitado por membrana (envoltório nuclear) e organelas membranosas. Ex.: animais, plantas e fungos.', 'EU tenho núcleo'],
+  ['tipos', 'Célula', 'Nucleoide', 'O que é e onde aparece?', 'Região do citoplasma dos procariontes onde está o DNA, sem membrana ao redor.', ''],
+  ['tipos', 'Célula', 'Célula vegetal', 'O que ela tem que a animal não tem?', 'Parede celular de celulose, cloroplastos (nas células que fazem fotossíntese) e um grande vacúolo central.', ''],
+  ['tipos', 'Célula', 'Fungos', 'Como é sua parede? E sua reserva?', 'Parede de quitina, reserva de glicogênio e nenhum cloroplasto: são heterótrofos.', 'Veste-se como planta (parede), come como bicho (heterótrofo)'],
+  ['org', 'Organela', 'Ribossomo', 'Qual é sua principal função?', 'Síntese de proteínas: une aminoácidos seguindo a mensagem do RNA mensageiro. Existe em todas as células.', 'a fábrica de proteínas'],
+  ['org', 'Organela', 'RER', 'O que o diferencia e o que faz?', 'Tem ribossomos presos à superfície. Recebe, dobra e processa proteínas destinadas à secreção, às membranas ou aos lisossomos.', 'Rugoso → Ribossomos → pRoteínas'],
+  ['org', 'Organela', 'REL', 'Qual é sua função principal?', 'Síntese de lipídios (como fosfolipídios e hormônios esteroides). Também atua na desintoxicação, principalmente no fígado.', 'Liso → Lipídios'],
+  ['org', 'Organela', 'Complexo golgiense', 'O que ele faz?', 'Modifica, organiza, empacota e direciona substâncias, principalmente proteínas vindas do RER. Forma os lisossomos.', 'trabalha por MOED: Modifica, Organiza, Empacota, Direciona'],
+  ['org', 'Organela', 'Lisossomo', 'Qual é sua função?', 'Digestão intracelular: suas enzimas degradam materiais vindos de fora e partes velhas da célula, permitindo a reciclagem.', 'lise = quebra'],
+  ['org', 'Organela', 'Autofagia', 'O que é?', 'Digestão, pelos lisossomos, de partes da própria célula (como organelas desgastadas) para reaproveitar os materiais.', 'auto = a si mesmo; fagia = comer'],
+  ['org', 'Integração', 'Proteína de secreção', 'Qual é o caminho?', 'Ribossomo no RER → interior do RER → vesícula → complexo golgiense → vesícula de secreção → membrana → meio externo.', ''],
+  ['mem', 'Membrana', 'Membrana plasmática', 'Do que é formada?', 'Bicamada de fosfolipídios com proteínas inseridas. É seletivamente permeável: controla o que entra e sai.', 'a portaria da célula'],
+  ['mem', 'Transporte', 'Transporte passivo', 'Gasta ATP?', 'Não há gasto direto de ATP. A substância vai a favor do gradiente (maior → menor). Inclui difusão simples, facilitada e osmose.', ''],
+  ['mem', 'Transporte', 'Difusão simples', 'Como acontece?', 'De maior para menor concentração, direto pela bicamada, sem proteína transportadora e sem ATP. Ex.: O₂ e CO₂.', ''],
+  ['mem', 'Transporte', 'Difusão facilitada', 'Qual a diferença para a simples?', 'Também vai de maior para menor e sem ATP, mas a substância passa por uma proteína de membrana. Ex.: glicose.', 'FACILITADA = tem uma proteína ajudando'],
+  ['mem', 'Transporte', 'Osmose', 'O que se move?', 'A ÁGUA, através de uma membrana seletivamente permeável, do meio com menos soluto para o meio com mais soluto. Sem gasto de ATP.', ''],
+  ['mem', 'Osmose', 'Meio hipertônico', 'O que acontece com a célula?', 'O meio tem mais soluto que a célula: ela perde água. A hemácia murcha; a célula vegetal sofre plasmólise.', 'HIPER = mais soluto fora'],
+  ['mem', 'Osmose', 'Meio hipotônico', 'O que acontece com a célula?', 'O meio tem menos soluto que a célula: ela ganha água. A hemácia pode se romper; a célula vegetal fica túrgida.', 'HIPO = menos soluto fora'],
+  ['mem', 'Transporte', 'Transporte ativo', 'O que o caracteriza?', 'Gasta energia (ATP) e usa proteínas transportadoras para levar substâncias contra o gradiente (menor → maior).', 'ATivo → ATP'],
+  ['mem', 'Transporte', 'Bomba de sódio e potássio', 'Que tipo de transporte é?', 'Transporte ativo: a cada ATP, leva 3 Na⁺ para fora e 2 K⁺ para dentro, ambos contra o gradiente.', '']
+].map(([g, cat, front, q, back, tip], i) => ({ id: i, g, cat, front, q, back, tip }));
+const KEY = 'celula.v1.fc';
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+class Component extends DCLogic {
+  state = { order: CARDS.map(c => c.id), pos: 0, flipped: false, marks: {}, onlyRev: false };
+  componentDidMount() { try { const m = JSON.parse(localStorage.getItem(KEY) || '{}'); this.setState({ marks: m }); } catch (e) {} }
+  save(marks) { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) {} }
+  deck() { const { order, marks, onlyRev } = this.state; const d = onlyRev ? order.filter(id => marks[id] === 'rev') : order; return d.length ? d : order; }
+  go(delta) { const n = this.deck().length; this.setState(s => ({ pos: (s.pos + delta + n) % n, flipped: false })); }
+  mark(v) {
+    const id = this.deck()[this.state.pos % this.deck().length];
+    const marks = { ...this.state.marks, [id]: v }; this.save(marks);
+    this.setState({ marks }, () => { if (!this.state.onlyRev || v === 'rev') this.go(1); else this.setState(s => ({ pos: s.pos % Math.max(1, this.deck().length), flipped: false })); });
+  }
+  renderVals() {
+    const { pos, flipped, marks, onlyRev } = this.state, deck = this.deck(), c = CARDS[deck[pos % deck.length]];
+    const vals = Object.values(marks), nOk = vals.filter(v => v === 'ok').length, nRev = vals.filter(v => v === 'rev').length;
+    return {
+      num: (pos % deck.length) + 1, total: deck.length, nOk, nRev, nLeft: CARDS.length - nOk - nRev,
+      cat: c.cat + (marks[c.id] === 'ok' ? ' · ✓ acertei' : marks[c.id] === 'rev' ? ' · ↺ revisar' : ''),
+      front: c.front, q: c.q, back: c.back, tip: c.tip, hasTip: !!c.tip, rot: flipped ? 180 : 0,
+      aria: flipped ? `${c.front}. Resposta: ${c.back}${c.tip ? ' Macete: ' + c.tip : ''}. Toque para voltar.` : `${c.front}. ${c.q} Toque para ver a resposta.`,
+      flip: () => { if (this.swiped) { this.swiped = false; return; } this.setState(s => ({ flipped: !s.flipped })); },
+      onKey: (e) => { if (e.key === 'ArrowRight') { e.preventDefault(); this.go(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); this.go(-1); } },
+      ts: (e) => { const t = e.touches[0]; this.tx = t.clientX; this.ty = t.clientY; },
+      te: (e) => { const t = e.changedTouches[0], dx = t.clientX - this.tx, dy = t.clientY - this.ty; if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { this.swiped = true; this.go(dx < 0 ? 1 : -1); setTimeout(() => { this.swiped = false; }, 400); } },
+      prev: () => this.go(-1), next: () => this.go(1),
+      shuffle: () => this.setState({ order: shuffle(CARDS.map(c => c.id)), pos: 0, flipped: false }),
+      markOk: () => this.mark('ok'), markRev: () => this.mark('rev'),
+      onlyRev, revLabel: onlyRev ? 'Mostrando só os que preciso revisar' : `Revisar só os marcados (${nRev})`,
+      revBorder: onlyRev ? 'var(--accent)' : 'var(--line2)', revBg: onlyRev ? 'var(--accent)' : 'transparent', revFg: onlyRev ? 'var(--on-accent)' : 'var(--ink)',
+      toggleRev: () => this.setState(s => ({ onlyRev: !s.onlyRev && nRev > 0, pos: 0, flipped: false })),
+      clear: () => { this.save({}); this.setState({ marks: {}, onlyRev: false, pos: 0, flipped: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

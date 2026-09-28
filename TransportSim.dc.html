@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<figure ref="{{ rootRef }}" data-noprint="" style="margin:24px 0;max-width:640px">
+  <div class="blueprint" style="position:relative;padding:12px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div style="display:flex;justify-content:space-between;gap:8px;font:600 13px/1.2 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">
+      <span>Fora da célula</span><span style="color:var(--ink)">{{ topCount }} partículas{{ topTag }}</span>
+    </div>
+    <svg viewBox="0 0 340 220" role="img" aria-label="{{ aria }}" style="display:block;width:100%;height:auto;touch-action:manipulation">
+      <rect x="0" y="0" width="340" height="88" style="fill:color-mix(in oklch, var(--accent) 5%, transparent)"></rect>
+      <rect x="0" y="88" width="340" height="44" style="fill:url(#p-bilayer)"></rect>
+      <sc-if value="{{ isFac }}" hint-placeholder-val="{{ false }}">
+        <g style="fill:var(--c-prot)">
+          <rect x="53" y="80" width="12" height="60" rx="5"></rect><rect x="75" y="80" width="12" height="60" rx="5"></rect>
+          <rect x="153" y="80" width="12" height="60" rx="5"></rect><rect x="175" y="80" width="12" height="60" rx="5"></rect>
+          <rect x="253" y="80" width="12" height="60" rx="5"></rect><rect x="275" y="80" width="12" height="60" rx="5"></rect>
+        </g>
+      </sc-if>
+      <sc-if value="{{ isAtivo }}" hint-placeholder-val="{{ false }}">
+        <g>
+          <rect x="146" y="74" width="48" height="72" rx="12" style="fill:var(--c-prot)"></rect>
+          <rect x="165" y="78" width="10" height="64" rx="4" style="fill:var(--bg)"></rect>
+          <g style="transform: scale({{ atpScale }});transform-origin:213px 158px;transition:transform .25s">
+            <use href="#s-atp" x="201" y="146" width="24" height="24"></use>
+          </g>
+          <text x="213" y="184" text-anchor="middle" style="font:600 11px var(--fh);fill:var(--ink)">{{ atpLabel }}</text>
+        </g>
+      </sc-if>
+      <g ref="{{ pRef }}"></g>
+    </svg>
+    <div style="display:flex;justify-content:space-between;gap:8px;font:600 13px/1.2 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px">
+      <span>Dentro (citoplasma)</span><span style="color:var(--ink)">{{ botCount }} partículas{{ botTag }}</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+    <button type="button" onClick="{{ toggle }}" aria-pressed="{{ playing }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer">{{ playLabel }}</button>
+    <button type="button" onClick="{{ reset }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer" style-hover="background: var(--hover)">↺ Reiniciar</button>
+    <sc-if value="{{ isAtivo }}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{ pump }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);letter-spacing:.03em;cursor:pointer;display:inline-flex;align-items:center;gap:6px" style-hover="background: var(--hover)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-atp"></use></svg>Gastar 1 ATP</button>
+    </sc-if>
+  </div>
+  <figcaption style="margin-top:10px;font:400 14px/1.5 var(--fb);color:var(--muted)" aria-live="polite">{{ caption }}</figcaption>
+</figure>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:640,&quot;height&quot;:520},&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;simples&quot;,&quot;facilitada&quot;,&quot;ativo&quot;],&quot;default&quot;:&quot;simples&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const NS = 'http://www.w3.org/2000/svg';
+class Component extends DCLogic {
+  state = { playing: false, top: 0, bot: 0, atp: 0, flash: false };
+  rootRef = React.createRef(); pRef = React.createRef();
+  mode() { return this.props.mode || 'simples'; }
+  componentDidMount() {
+    this.rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.build();
+    this.io = new IntersectionObserver(([e]) => {
+      this.visible = e.isIntersecting;
+      if (this.visible && !this.rm && !this.autoStarted) { this.autoStarted = true; this.setState({ playing: true }); }
+      this.loop();
+    }, { threshold: 0.25 });
+    if (this.rootRef.current) this.io.observe(this.rootRef.current);
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); cancelAnimationFrame(this.raf); clearTimeout(this.ft); }
+  componentDidUpdate(pp, ps) { if (ps.playing !== this.state.playing) this.loop(); }
+  build() {
+    const g = this.pRef.current; if (!g) return;
+    while (g.firstChild) g.removeChild(g.firstChild);
+    const m = this.mode(), nTop = m === 'ativo' ? 16 : 28, nBot = m === 'ativo' ? 12 : 4;
+    this.parts = [];
+    const add = (top) => {
+      const p = { x: 12 + Math.random() * 316, y: top ? 8 + Math.random() * 70 : 142 + Math.random() * 70 };
+      let el;
+      if (m === 'facilitada') { el = document.createElementNS(NS, 'polygon'); el.setAttribute('points', '0,-5 4.3,-2.5 4.3,2.5 0,5 -4.3,2.5 -4.3,-2.5'); el.style.fill = 'var(--ink)'; }
+      else if (m === 'ativo') { el = document.createElementNS(NS, 'circle'); el.setAttribute('r', '4'); el.style.fill = 'var(--bg)'; el.style.stroke = 'var(--ink)'; el.style.strokeWidth = '2'; }
+      else { el = document.createElementNS(NS, 'circle'); el.setAttribute('r', '3.6'); el.style.fill = 'var(--ink)'; }
+      g.appendChild(el); p.el = el; this.parts.push(p);
+    };
+    for (let i = 0; i < nTop; i++) add(true);
+    for (let i = 0; i < nBot; i++) add(false);
+    this.draw(); this.count();
+  }
+  inBand(y) { return y > 83 && y < 137; }
+  step(k) {
+    const m = this.mode(), S = 2.1 * k, ch = [70, 170, 270];
+    for (const p of this.parts) {
+      if (p.path) {
+        const t = p.path[0], dx = t.x - p.x, dy = t.y - p.y, d = Math.hypot(dx, dy), v = 1.8 * k;
+        if (d <= v) { p.x = t.x; p.y = t.y; p.path.shift(); if (!p.path.length) p.path = null; }
+        else { p.x += dx / d * v; p.y += dy / d * v; }
+        continue;
+      }
+      let nx = p.x + (Math.random() - 0.5) * 2 * S, ny = p.y + (Math.random() - 0.5) * 2 * S;
+      nx = Math.max(6, Math.min(334, nx)); ny = Math.max(6, Math.min(214, ny));
+      if (m === 'simples') {
+        if (!this.inBand(p.y) && this.inBand(ny) && Math.random() < 0.55) ny = p.y;
+      } else if (m === 'facilitada') {
+        if (this.inBand(p.y)) { nx = p.x; }
+        else if (this.inBand(ny)) { const c = ch.find(c => Math.abs(nx - c) < 9); if (c) nx = c; else ny = p.y; }
+      } else {
+        if (this.inBand(ny)) ny = p.y;
+      }
+      p.x = nx; p.y = ny;
+    }
+  }
+  draw() {
+    for (const p of this.parts) {
+      if (p.el.tagName === 'polygon') p.el.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
+      else { p.el.setAttribute('cx', p.x.toFixed(1)); p.el.setAttribute('cy', p.y.toFixed(1)); }
+    }
+  }
+  count() {
+    let top = 0, bot = 0; for (const p of this.parts) (p.y < 110 ? top++ : bot++);
+    if (top !== this.state.top || bot !== this.state.bot) this.setState({ top, bot });
+  }
+  loop() {
+    cancelAnimationFrame(this.raf);
+    if (!(this.state.playing && this.visible)) return;
+    let last = performance.now(), lc = 0, lp = last;
+    const tick = (t) => {
+      const k = Math.min(3, (t - last) / 16.7); last = t;
+      this.step(k); this.draw();
+      if (t - lc > 250) { lc = t; this.count(); }
+      if (this.mode() === 'ativo' && t - lp > 1700) { lp = t; this.pump(true); }
+      if (this.state.playing && this.visible) this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+  pump(auto) {
+    const cands = this.parts.filter(p => !p.path && p.y > 137);
+    if (!cands.length) return;
+    cands.sort((a, b) => Math.hypot(a.x - 170, a.y - 150) - Math.hypot(b.x - 170, b.y - 150));
+    const p = cands[0];
+    p.path = [{ x: 170, y: 152 }, { x: 170, y: 70 }, { x: 150 + Math.random() * 40, y: 50 }];
+    this.setState(s => ({ atp: s.atp + 1, flash: true }));
+    clearTimeout(this.ft); this.ft = setTimeout(() => this.setState({ flash: false }), 600);
+    if (!auto && !this.state.playing) this.setState({ playing: true });
+  }
+  renderVals() {
+    const m = this.mode(), { top, bot, playing, atp, flash } = this.state;
+    const hi = (a, b) => a > b ? ' · maior concentração' : a < b ? ' · menor concentração' : ' · equilíbrio';
+    const caps = {
+      simples: 'Cada bolinha é uma molécula pequena, como o O₂. Elas se movem ao acaso e atravessam a bicamada diretamente. Resultado: o número de moléculas tende a se igualar dos dois lados, sem gasto de energia.',
+      facilitada: 'Cada hexágono é uma molécula de glicose. Ela não atravessa a bicamada sozinha: só passa pelas proteínas de membrana. Mesmo com a ajuda da proteína, o movimento continua sendo de maior para menor concentração, sem ATP.',
+      ativo: 'A bomba (proteína) pega partículas de dentro, onde há MENOS, e leva para fora, onde há MAIS. Cada viagem gasta um ATP. Sem energia, isso não aconteceria.'
+    };
+    const arias = { simples: 'Simulação de difusão simples', facilitada: 'Simulação de difusão facilitada com três proteínas de canal', ativo: 'Simulação de transporte ativo com uma bomba de membrana e ATP' };
+    return {
+      rootRef: this.rootRef, pRef: this.pRef, isFac: m === 'facilitada', isAtivo: m === 'ativo',
+      topCount: top, botCount: bot, topTag: hi(top, bot), botTag: hi(bot, top),
+      playing, playLabel: playing ? '❚❚ Pausar' : '▶ Reproduzir',
+      toggle: () => this.setState(s => ({ playing: !s.playing })),
+      reset: () => { this.setState({ atp: 0 }); this.build(); },
+      pump: () => this.pump(false),
+      atpScale: flash ? 1.35 : 1, atpLabel: flash ? 'ATP → ADP + P' : `ATP gastos: ${atp}`,
+      caption: caps[m], aria: arias[m]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Célula — Uma viagem por dentro da vida</title>
+  <link rel="stylesheet" href="ds/styles.css">
+  <style>
+    :root{--bg:#f2f2f3;--ink:#1d1f20;--muted:#55585c;--line:color-mix(in srgb,#1d1f20 14%,transparent);--line2:color-mix(in srgb,#1d1f20 30%,transparent);--hover:color-mix(in srgb,#1d1f20 6%,transparent);--accent:#5980a6;--accent-ink:#3d5d7c;--on-accent:#f5f5f8;
+      --ok:oklch(0.5 0.12 152);--bad:oklch(0.52 0.17 28);
+      --c-ribo:oklch(0.68 0.14 72);--c-rer:oklch(0.52 0.12 258);--c-rel:oklch(0.57 0.09 188);--c-golgi:oklch(0.55 0.15 350);--c-liso:oklch(0.58 0.16 34);--c-mito:oklch(0.58 0.11 118);--c-cloro:oklch(0.56 0.14 148);--c-nucleo:oklch(0.5 0.14 298);--c-agua:oklch(0.6 0.12 232);--c-atp:oklch(0.84 0.16 95);--c-parede:oklch(0.6 0.07 70);--c-prot:#416180;
+      --fh:"Barlow Condensed",system-ui,sans-serif;--fb:"Barlow",system-ui,sans-serif;
+      --color-bg:var(--bg);--color-text:var(--ink);--color-divider:var(--line2);--color-accent:var(--accent);color-scheme:light}
+    :root[data-theme="dark"]{--bg:#11171d;--ink:#e6e9ec;--muted:#a6aeb7;--line:color-mix(in srgb,#e6e9ec 14%,transparent);--line2:color-mix(in srgb,#e6e9ec 30%,transparent);--hover:color-mix(in srgb,#e6e9ec 8%,transparent);--accent:#94bce3;--accent-ink:#b5d9fd;--on-accent:#11171d;
+      --ok:oklch(0.78 0.13 152);--bad:oklch(0.74 0.15 30);
+      --c-ribo:oklch(0.82 0.14 78);--c-rer:oklch(0.72 0.12 258);--c-rel:oklch(0.77 0.09 188);--c-golgi:oklch(0.74 0.14 350);--c-liso:oklch(0.74 0.15 36);--c-mito:oklch(0.78 0.11 118);--c-cloro:oklch(0.75 0.14 148);--c-nucleo:oklch(0.74 0.13 298);--c-agua:oklch(0.76 0.11 232);--c-atp:oklch(0.86 0.16 95);--c-parede:oklch(0.76 0.07 70);--c-prot:#749dc4;color-scheme:dark}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);overflow-x:clip;transition:background .3s,color .3s}
+    a{color:var(--accent-ink);text-underline-offset:3px}
+    a:hover{color:var(--ink)}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    summary::-webkit-details-marker{display:none}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+    @media print{
+      :root,:root[data-theme="dark"]{--bg:#fff;--ink:#111;--muted:#444;--line:#ccc;--line2:#999;--accent:#416180;--accent-ink:#2c455d;--on-accent:#fff;color-scheme:light}
+      [data-noprint]{display:none!important}
+      [data-org]{display:block!important;break-inside:avoid;margin-bottom:24px}
+      header{position:static!important}
+      section{padding:18px 0!important;border:0!important}
+      body{font-size:11pt}
+      [data-pbreak]{break-before:page}
+    }
+  </style>
+</helmet>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--ink)"></path></marker>
+    <marker id="arr-agua" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--c-agua)"></path></marker>
+    <marker id="arr-acc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--accent)"></path></marker>
+    <pattern id="p-bilayer" width="12" height="44" patternUnits="userSpaceOnUse">
+      <path d="M4.3 9.5V20M7.7 9.5V20M4.3 24V34.5M7.7 24V34.5" style="stroke:var(--muted);stroke-width:1.2"></path>
+      <circle cx="6" cy="5" r="4.6" style="fill:var(--accent)"></circle>
+      <circle cx="6" cy="39" r="4.6" style="fill:var(--accent)"></circle>
+    </pattern>
+    <g id="rer-layer">
+      <path d="M8 16 Q22 8 36 16 T64 16 T92 16 T116 16" style="fill:none;stroke:var(--c-rer);stroke-width:10;stroke-linecap:round"></path>
+      <path d="M8 16 Q22 8 36 16 T64 16 T92 16 T116 16" style="fill:none;stroke:var(--bg);stroke-width:4.5;stroke-linecap:round"></path>
+      <g style="fill:var(--c-ribo)">
+        <circle cx="15" cy="5.5" r="2.6"></circle><circle cx="29" cy="5.5" r="2.6"></circle><circle cx="43" cy="11.5" r="2.6"></circle><circle cx="57" cy="11.5" r="2.6"></circle>
+        <circle cx="71" cy="5.5" r="2.6"></circle><circle cx="85" cy="5.5" r="2.6"></circle><circle cx="99" cy="11.5" r="2.6"></circle><circle cx="111" cy="11" r="2.6"></circle>
+        <circle cx="22" cy="19.5" r="2.4"></circle><circle cx="50" cy="27.5" r="2.4"></circle><circle cx="78" cy="19.5" r="2.4"></circle><circle cx="104" cy="27.5" r="2.4"></circle>
+      </g>
+    </g>
+    <symbol id="s-ribo" viewBox="0 0 20 20"><circle cx="10" cy="12.5" r="6" style="fill:var(--c-ribo)"></circle><circle cx="10" cy="5.2" r="3.8" style="fill:var(--c-ribo);opacity:.7"></circle></symbol>
+    <symbol id="s-rer" viewBox="0 0 124 76"><use href="#rer-layer"></use><use href="#rer-layer" y="22"></use><use href="#rer-layer" y="44"></use></symbol>
+    <symbol id="s-rel" viewBox="0 0 124 76">
+      <g style="fill:none;stroke:var(--c-rel);stroke-width:10;stroke-linecap:round"><path d="M8 20 C 30 8, 42 40, 64 30 S 100 12, 116 24"></path><path d="M14 58 C 36 44, 58 68, 82 54 S 106 46, 116 58"></path><path d="M64 30 C 70 40, 74 48, 82 54"></path></g>
+      <g style="fill:none;stroke:var(--bg);stroke-width:4.5;stroke-linecap:round"><path d="M8 20 C 30 8, 42 40, 64 30 S 100 12, 116 24"></path><path d="M14 58 C 36 44, 58 68, 82 54 S 106 46, 116 58"></path><path d="M64 30 C 70 40, 74 48, 82 54"></path></g>
+    </symbol>
+    <symbol id="s-golgi" viewBox="0 0 110 90">
+      <g style="fill:none;stroke:var(--c-golgi);stroke-width:9;stroke-linecap:round"><path d="M14 18 Q55 42 96 18"></path><path d="M18 34 Q55 57 92 34"></path><path d="M24 50 Q55 71 86 50"></path><path d="M30 65 Q55 84 80 65"></path></g>
+      <g style="fill:none;stroke:var(--bg);stroke-width:3.5;stroke-linecap:round"><path d="M14 18 Q55 42 96 18"></path><path d="M18 34 Q55 57 92 34"></path><path d="M24 50 Q55 71 86 50"></path><path d="M30 65 Q55 84 80 65"></path></g>
+      <g style="fill:var(--bg);stroke:var(--c-golgi);stroke-width:2.2"><circle cx="102" cy="44" r="5"></circle><circle cx="8" cy="50" r="4.5"></circle><circle cx="100" cy="62" r="3.5"></circle></g>
+      <circle cx="102" cy="44" r="2" style="fill:var(--c-ribo)"></circle>
+    </symbol>
+    <symbol id="s-liso" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" style="fill:color-mix(in oklch, var(--c-liso) 25%, var(--bg));stroke:var(--c-liso);stroke-width:2.5"></circle><g style="fill:var(--c-liso)"><circle cx="14" cy="16" r="2.3"></circle><circle cx="24" cy="13" r="2"></circle><circle cx="26" cy="24" r="2.5"></circle><circle cx="15" cy="26" r="2"></circle><circle cx="20" cy="20" r="1.6"></circle></g></symbol>
+    <symbol id="s-mito" viewBox="0 0 90 44"><ellipse cx="45" cy="22" rx="41" ry="18" style="fill:color-mix(in oklch, var(--c-mito) 18%, var(--bg));stroke:var(--c-mito);stroke-width:2.5"></ellipse><path d="M12 22 L18 10 L26 34 L34 10 L42 34 L50 10 L58 34 L66 10 L74 34 L80 22" style="fill:none;stroke:var(--c-mito);stroke-width:1.8;stroke-linejoin:round"></path></symbol>
+    <symbol id="s-cloro" viewBox="0 0 90 44"><ellipse cx="45" cy="22" rx="41" ry="18" style="fill:color-mix(in oklch, var(--c-cloro) 22%, var(--bg));stroke:var(--c-cloro);stroke-width:2.5"></ellipse><g style="fill:var(--c-cloro)"><rect x="20" y="14" width="10" height="4"></rect><rect x="20" y="20" width="10" height="4"></rect><rect x="20" y="26" width="10" height="4"></rect><rect x="40" y="14" width="10" height="4"></rect><rect x="40" y="20" width="10" height="4"></rect><rect x="40" y="26" width="10" height="4"></rect><rect x="60" y="14" width="10" height="4"></rect><rect x="60" y="20" width="10" height="4"></rect><rect x="60" y="26" width="10" height="4"></rect></g></symbol>
+    <symbol id="s-nucleo" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" style="fill:color-mix(in oklch, var(--c-nucleo) 14%, var(--bg));stroke:var(--c-nucleo);stroke-width:3"></circle>
+      <circle cx="50" cy="50" r="41" style="fill:none;stroke:var(--c-nucleo);stroke-width:1.4;stroke-dasharray:9 3"></circle>
+      <circle cx="63" cy="38" r="10" style="fill:var(--c-nucleo);opacity:.5"></circle>
+      <g style="fill:none;stroke:var(--c-nucleo);stroke-width:2.6;stroke-linecap:round"><path d="M22 60 q7 -12 14 0 t14 0 t14 0 t14 0"></path><path d="M24 40 q6 -10 12 0 t12 0"></path><path d="M30 76 q6 -9 12 0 t12 0 t12 0"></path></g>
+    </symbol>
+    <symbol id="s-atp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" style="fill:var(--c-atp);stroke:#3b3200;stroke-width:.8"></circle><path d="M13.5 3.5 L6.5 13.5 h5 l-1.5 7 7-10 h-5 z" style="fill:#1d1f20"></path></symbol>
+    <symbol id="s-agua" viewBox="0 0 24 24"><path d="M12 2 C12 2 4.5 11 4.5 15.5 A7.5 7.5 0 0 0 19.5 15.5 C19.5 11 12 2 12 2Z" style="fill:var(--c-agua)"></path></symbol>
+    <symbol id="s-prot" viewBox="0 0 44 16"><polyline points="4,5 12,11 20,5 28,11 36,5 40,11" style="fill:none;stroke:var(--c-ribo);stroke-width:1.5"></polyline><g style="fill:var(--c-ribo);stroke:var(--ink);stroke-width:.6"><circle cx="4" cy="5" r="3.4"></circle><circle cx="12" cy="11" r="3.4"></circle><circle cx="20" cy="5" r="3.4"></circle><circle cx="28" cy="11" r="3.4"></circle><circle cx="36" cy="5" r="3.4"></circle></g></symbol>
+    <symbol id="s-vesic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" style="fill:var(--bg);stroke:var(--c-golgi);stroke-width:2.5"></circle><circle cx="12" cy="12" r="3.4" style="fill:var(--c-ribo)"></circle></symbol>
+    <symbol id="s-proc" viewBox="0 0 300 170">
+      <g style="opacity:var(--o-other,1);transition:opacity .4s">
+        <rect x="14" y="34" width="252" height="102" rx="51" style="fill:none;stroke:var(--c-parede);stroke-width:7"></rect>
+        <rect x="24" y="44" width="232" height="82" rx="41" style="fill:color-mix(in oklch, var(--accent) 7%, transparent);stroke:var(--accent);stroke-width:5"></rect>
+        <rect x="24" y="44" width="232" height="82" rx="41" style="fill:none;stroke:var(--bg);stroke-width:1.6"></rect>
+        <path d="M266 85 C 276 68, 284 102, 296 84" style="fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round"></path>
+        <g style="fill:var(--c-ribo)"><circle cx="60" cy="70" r="3.2"></circle><circle cx="78" cy="104" r="3.2"></circle><circle cx="96" cy="60" r="3.2"></circle><circle cx="190" cy="112" r="3.2"></circle><circle cx="220" cy="64" r="3.2"></circle><circle cx="236" cy="92" r="3.2"></circle><circle cx="118" cy="114" r="3.2"></circle><circle cx="170" cy="56" r="3.2"></circle><circle cx="52" cy="96" r="3.2"></circle></g>
+      </g>
+      <g style="opacity:var(--o-dna,1);transition:opacity .4s">
+        <ellipse cx="145" cy="86" rx="44" ry="28" style="fill:color-mix(in oklch, var(--c-nucleo) 12%, transparent)"></ellipse>
+        <path d="M112 80 C 120 60, 150 66, 146 84 S 118 104, 132 110 S 170 112, 176 92 S 150 64, 168 66 S 190 86, 176 100" style="fill:none;stroke:var(--c-nucleo);stroke-width:2.8;stroke-linecap:round"></path>
+        <circle cx="205" cy="96" r="9" style="fill:none;stroke:var(--c-nucleo);stroke-width:2"></circle>
+      </g>
+    </symbol>
+    <symbol id="s-euca" viewBox="0 0 300 170">
+      <g style="opacity:var(--o-other,1);transition:opacity .4s">
+        <path d="M150 10 C 230 8, 290 40, 290 86 S 236 162, 150 162 S 10 134, 10 86 S 70 12, 150 10Z" style="fill:color-mix(in oklch, var(--accent) 7%, transparent);stroke:var(--accent);stroke-width:5"></path>
+        <path d="M150 10 C 230 8, 290 40, 290 86 S 236 162, 150 162 S 10 134, 10 86 S 70 12, 150 10Z" style="fill:none;stroke:var(--bg);stroke-width:1.6"></path>
+        <use href="#s-mito" x="186" y="36" width="62" height="30"></use>
+        <use href="#s-golgi" x="206" y="84" width="50" height="41"></use>
+        <use href="#s-rer" x="152" y="118" width="58" height="36"></use>
+        <use href="#s-liso" x="42" y="112" width="20" height="20"></use>
+        <g style="fill:var(--c-ribo)"><circle cx="180" cy="82" r="3"></circle><circle cx="50" cy="60" r="3"></circle><circle cx="262" cy="130" r="3"></circle></g>
+      </g>
+      <g style="opacity:var(--o-dna,1);transition:opacity .4s"><use href="#s-nucleo" x="68" y="44" width="84" height="84"></use></g>
+    </symbol>
+  </defs>
+</svg>
+<header data-noprint="" style="position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--bg) 94%, transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1px solid var(--line)">
+  <div style="max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:6px 12px 4px 16px;min-height:52px">
+    <a href="#topo" style="font:600 20px/1 var(--fh);letter-spacing:.14em;color:var(--ink);text-decoration:none">CÉLULA</a>
+    <span style="flex:1;min-width:0;font:500 14px/1.2 var(--fb);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ currentLabel }}</span>
+    <button type="button" onClick="{{ toggleTheme }}" aria-label="{{ themeAria }}" style="width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;color:var(--ink);cursor:pointer" style-hover="background: var(--hover)">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="{{ themeIcon }}"></path></svg>
+    </button>
+    <button type="button" onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-controls="sumario" aria-label="Abrir sumário" style="width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;color:var(--ink);cursor:pointer" style-hover="background: var(--hover)">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    </button>
+  </div>
+  <nav aria-label="Etapas do estudo" style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:0 16px 8px">
+    <sc-for list="{{ stages }}" as="s" hint-placeholder-count="6">
+      <a href="{{ s.href }}" aria-label="{{ s.aria }}" aria-current="{{ s.current }}" style="display:flex;flex-direction:column;gap:5px;text-decoration:none;color:{{ s.color }};min-height:30px;padding-top:4px">
+        <span style="display:block;height:4px;background:{{ s.bar }};border:1px solid {{ s.barBorder }}"></span>
+        <span style="font:600 12px/1 var(--fh);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.label }}</span>
+      </a>
+    </sc-for>
+  </nav>
+</header>
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div id="sumario" role="dialog" aria-modal="true" aria-label="Sumário" data-noprint="" style="position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;padding:16px 20px 40px">
+    <div style="max-width:720px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;min-height:52px">
+        <p style="margin:0;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Sumário · {{ visitedCount }} de 17 capítulos vistos</p>
+        <button type="button" onClick="{{ toggleMenu }}" aria-label="Fechar sumário" style="width:44px;height:44px;border:0;background:transparent;color:var(--ink);font:400 28px/1 var(--fb);cursor:pointer">×</button>
+      </div>
+      <ol style="list-style:none;margin:8px 0 28px;padding:0">
+        <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="17">
+          <li><a href="{{ c.href }}" onClick="{{ closeMenu }}" style="display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:8px;min-height:48px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)">
+            <span style="font:600 15px/1 var(--fh);color:var(--accent-ink)">{{ c.n }}</span>
+            <span style="font:600 20px/1.1 var(--fh)">{{ c.title }}</span>
+            <span style="font:400 13px/1 var(--fb);color:var(--muted)">{{ c.mark }}</span>
+          </a></li>
+        </sc-for>
+      </ol>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <button type="button" onClick="{{ askReset }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer">{{ resetLabel }}</button>
+        <button type="button" onClick="{{ printIt }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer">Imprimir resumo</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+<main id="topo" style="background:var(--bg);color:var(--ink);display:block">
+  <section aria-label="Abertura" style="padding:56px 20px 64px;position:relative;overflow:hidden">
+    <div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 56px;align-items:center">
+      <div>
+        <p style="margin:0 0 18px;font:600 13px/1 var(--fh);letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink)">Biologia · 1º ano do Ensino Médio</p>
+        <h1 style="margin:0;font:600 clamp(84px,25vw,168px)/.86 var(--fh);letter-spacing:-.02em">CÉLULA</h1>
+        <p style="margin:14px 0 0;font:400 clamp(24px,6vw,34px)/1.15 var(--fh);letter-spacing:.01em">Uma viagem por dentro da vida</p>
+        <p style="margin:22px 0 0;display:flex;gap:14px;flex-wrap:wrap;font:600 17px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)"><span>Entenda.</span><span>Visualize.</span><span>Memorize.</span></p>
+        <p style="margin:26px 0 0;max-width:460px;font:400 17px/1.6 var(--fb);color:var(--ink);text-wrap:pretty">Antes de decorar nomes, vamos entender onde estamos. Toque em <strong>Aproximar</strong> e desça do seu corpo inteiro até a menor unidade viva.</p>
+      </div>
+      <div data-noprint="">
+        <div class="blueprint" style="padding:0;aspect-ratio:1/1;max-width:440px;margin:0 auto">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="-100 -100 200 200" role="img" aria-label="{{ zoomAria }}" style="display:block;width:100%;height:100%">
+            <g style="transform: scale({{ zs }}) translate({{ ztx }}px, {{ zty }}px);transition:transform 1s cubic-bezier(.6,0,.2,1)">
+              <g style="font-family:var(--fh);font-weight:600;letter-spacing:.06em">
+                <rect x="-90" y="-90" width="180" height="180" style="fill:none;stroke:{{ zCol.0 }};stroke-width:{{ zW.0 }};vector-effect:non-scaling-stroke"></rect>
+                <text x="-85" y="-76" style="font-size:11px;fill:{{ zCol.0 }}">ORGANISMO</text>
+                <rect x="-17.8" y="-22.8" width="75.6" height="75.6" style="fill:none;stroke:{{ zCol.1 }};stroke-width:{{ zW.1 }};vector-effect:non-scaling-stroke"></rect>
+                <text x="-15.7" y="-16.9" style="font-size:4.62px;fill:{{ zCol.1 }}">SISTEMA</text>
+                <rect x="13.8" y="6.8" width="32.4" height="32.4" style="fill:none;stroke:{{ zCol.2 }};stroke-width:{{ zW.2 }};vector-effect:non-scaling-stroke"></rect>
+                <text x="14.7" y="9.32" style="font-size:1.98px;fill:{{ zCol.2 }}">ÓRGÃO</text>
+                <rect x="27.25" y="19.25" width="13.5" height="13.5" style="fill:none;stroke:{{ zCol.3 }};stroke-width:{{ zW.3 }};vector-effect:non-scaling-stroke"></rect>
+                <text x="27.62" y="20.3" style="font-size:.825px;fill:{{ zCol.3 }}">TECIDO</text>
+                <rect x="32.62" y="24.32" width="5.76" height="5.76" style="fill:none;stroke:{{ zCol.4 }};stroke-width:{{ zW.4 }};vector-effect:non-scaling-stroke"></rect>
+                <text x="32.78" y="24.77" style="font-size:.352px;fill:{{ zCol.4 }}">CÉLULA</text>
+              </g>
+              <use href="#s-euca" x="{{ zc.x }}" y="{{ zc.y }}" width="{{ zc.w }}" height="{{ zc.h }}"></use>
+            </g>
+          </svg>
+        </div>
+        <ol style="list-style:none;margin:18px auto 0;padding:0;max-width:440px">
+          <sc-for list="{{ ladder }}" as="l" hint-placeholder-count="5">
+            <li><button type="button" onClick="{{ l.go }}" aria-current="{{ l.current }}" style="display:grid;grid-template-columns:28px 1fr;gap:4px 10px;width:100%;text-align:left;padding:8px 0;min-height:44px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;opacity:{{ l.op }}">
+              <span style="font:600 15px/1.3 var(--fh);color:var(--accent-ink)">{{ l.arrow }}</span>
+              <span><span style="font:600 19px/1.2 var(--fh);letter-spacing:.02em;text-transform:uppercase">{{ l.name }}</span><sc-if value="{{ l.current }}" hint-placeholder-val="{{ false }}"><span style="display:block;font:400 15px/1.45 var(--fb);color:var(--muted);margin-top:2px">{{ l.ex }}</span></sc-if></span>
+            </button></li>
+          </sc-for>
+        </ol>
+        <div style="display:flex;gap:8px;margin:14px auto 0;max-width:440px">
+          <button type="button" onClick="{{ zoomOut }}" disabled="{{ zoomMin }}" style="min-height:48px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer;opacity:{{ zoomOutOp }}">↑ Afastar</button>
+          <sc-if value="{{ zoomNotEnd }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ zoomIn }}" style="flex:1;min-height:48px;padding:8px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.04em;cursor:pointer">Aproximar ↓</button>
+          </sc-if>
+          <sc-if value="{{ zoomEnd }}" hint-placeholder-val="{{ false }}">
+            <a href="#cap-01" class="blueprint" style="flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.04em;text-decoration:none;border-color:var(--accent)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Agora entre na célula →</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cap-01" data-chapter="01" data-title="O mundo das células" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">01</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Célula</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">O mundo das células</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 32px;text-wrap:pretty">Uma bactéria, uma levedura, uma árvore e você têm uma coisa em comum: todos são feitos de células. Alguns seres vivos são uma célula só (unicelulares); outros, como nós, reúnem trilhões delas (pluricelulares).</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:28px 36px;max-width:980px">
+        <div style="border-top:2px solid var(--ink);padding-top:14px"><p style="margin:0 0 6px;font:600 44px/1 var(--fh);color:var(--accent-ink)">1</p><p style="margin:0;font:400 17px/1.55 var(--fb)"><strong>Todos os seres vivos são formados por células.</strong> Seja uma única célula, seja uma multidão delas.</p></div>
+        <div style="border-top:2px solid var(--ink);padding-top:14px"><p style="margin:0 0 6px;font:600 44px/1 var(--fh);color:var(--accent-ink)">2</p><p style="margin:0;font:400 17px/1.55 var(--fb)"><strong>A célula é a unidade básica da vida.</strong> É a menor estrutura capaz de realizar, sozinha, as funções vitais: obter energia, produzir substâncias, reagir ao ambiente e se reproduzir.</p></div>
+        <div style="border-top:2px solid var(--ink);padding-top:14px"><p style="margin:0 0 6px;font:600 44px/1 var(--fh);color:var(--accent-ink)">3</p><p style="margin:0;font:400 17px/1.55 var(--fb)"><strong>Toda célula vem de outra célula.</strong> Células novas surgem pela divisão de células que já existiam.</p></div>
+      </div>
+      <p style="font:400 15px/1.5 var(--fb);color:var(--muted);margin:18px 0 0;max-width:680px">Essas três ideias formam a <strong style="color:var(--ink)">teoria celular</strong>.</p>
+      <div class="blueprint" style="padding:18px 20px;margin:36px 0 0;max-width:720px">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Precisa saber</p>
+        <p style="margin:0;font:500 18px/1.5 var(--fb)">Organismo → sistema → órgão → tecido → <strong>célula</strong>. A célula é o nível mais simples que ainda está vivo.</p>
+      </div>
+      <div style="margin:32px 0 0;max-width:720px;border-top:1px solid var(--ink);padding-top:14px">
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+        <p style="margin:0;font:400 17px/1.55 var(--fb)"><strong>Vírus não são células.</strong> Eles não têm citoplasma nem ribossomos e só se reproduzem dentro de uma célula hospedeira.</p>
+      </div>
+      <details style="margin:24px 0 0;max-width:720px;border:1px solid var(--line2)">
+        <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Qual é o tamanho de uma célula?</summary>
+        <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0">A maioria das células só é visível ao microscópio. Elas são medidas em micrômetros (µm): 1 µm é a milésima parte de um milímetro. Uma bactéria típica mede poucos micrômetros; muitas células humanas ficam entre 10 e 30 µm. Por isso as ilustrações deste material estão fora de escala.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="cap-02" data-chapter="02" data-title="Anatomia básica" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">02</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Célula</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Anatomia básica de uma célula</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 32px;text-wrap:pretty">Células são muito diferentes entre si, mas praticamente todas têm as mesmas três partes. Guarde este desenho: ele vai crescer ao longo do estudo.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:28px 48px;align-items:center">
+        <figure class="blueprint" style="margin:0;padding:16px">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="0 0 320 210" role="img" aria-label="Célula simples com membrana plasmática (1), citoplasma (2) e material genético (3)" style="display:block;width:100%;height:auto">
+            <path d="M160 14 C 250 12, 306 56, 304 108 S 246 198, 158 196 S 14 164, 16 106 S 76 16, 160 14Z" style="fill:color-mix(in oklch, var(--accent) 8%, transparent);stroke:var(--accent);stroke-width:6"></path>
+            <path d="M160 14 C 250 12, 306 56, 304 108 S 246 198, 158 196 S 14 164, 16 106 S 76 16, 160 14Z" style="fill:none;stroke:var(--bg);stroke-width:2"></path>
+            <path d="M120 104 C 130 80, 160 86, 156 104 S 128 124, 142 130 S 180 132, 186 112 S 160 84, 178 86" style="fill:none;stroke:var(--c-nucleo);stroke-width:3;stroke-linecap:round"></path>
+            <g style="fill:var(--c-ribo)"><circle cx="80" cy="80" r="3.4"></circle><circle cx="236" cy="70" r="3.4"></circle><circle cx="250" cy="140" r="3.4"></circle><circle cx="90" cy="150" r="3.4"></circle><circle cx="210" cy="164" r="3.4"></circle></g>
+            <g style="font:600 14px var(--fh)">
+              <circle cx="58" cy="34" r="12" style="fill:var(--ink)"></circle><text x="58" y="39" text-anchor="middle" style="fill:var(--bg)">1</text>
+              <circle cx="232" cy="118" r="12" style="fill:var(--ink)"></circle><text x="232" y="123" text-anchor="middle" style="fill:var(--bg)">2</text>
+              <circle cx="152" cy="68" r="12" style="fill:var(--ink)"></circle><text x="152" y="73" text-anchor="middle" style="fill:var(--bg)">3</text>
+            </g>
+          </svg>
+          <figcaption style="font:400 13px/1.4 var(--fb);color:var(--muted);margin-top:8px">Esquema simplificado, fora de escala. Os grãos âmbar são ribossomos: você vai encontrá-los de novo.</figcaption>
+        </figure>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;gap:22px">
+          <li style="display:grid;grid-template-columns:36px 1fr;gap:12px"><span style="width:28px;height:28px;border-radius:14px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:600 15px/1 var(--fh)">1</span><div><p style="margin:0 0 4px;font:600 24px/1.1 var(--fh)">Membrana plasmática</p><p style="margin:0;font:400 16px/1.55 var(--fb)">A fronteira da célula. Separa o interior do meio externo e controla o que entra e o que sai.</p></div></li>
+          <li style="display:grid;grid-template-columns:36px 1fr;gap:12px"><span style="width:28px;height:28px;border-radius:14px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:600 15px/1 var(--fh)">2</span><div><p style="margin:0 0 4px;font:600 24px/1.1 var(--fh)">Citoplasma</p><p style="margin:0;font:400 16px/1.55 var(--fb)">Todo o interior entre a membrana e o material genético: um líquido gelatinoso (citosol) onde ficam as estruturas e acontecem muitas reações.</p></div></li>
+          <li style="display:grid;grid-template-columns:36px 1fr;gap:12px"><span style="width:28px;height:28px;border-radius:14px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:600 15px/1 var(--fh)">3</span><div><p style="margin:0 0 4px;font:600 24px/1.1 var(--fh)">Material genético (DNA)</p><p style="margin:0;font:400 16px/1.55 var(--fb)">As instruções da célula. É no DNA que está a informação para produzir as proteínas.</p></div></li>
+        </ol>
+      </div>
+      <dc-import name="Quiz" qid="q1" hint-size="100%,420px"></dc-import>
+      <p style="margin:40px 0 0;max-width:620px;font:500 italic 20px/1.5 var(--fb);color:var(--muted);text-wrap:pretty">Todas as células têm essas três partes. Mas o DNA não fica no mesmo lugar em todas elas, e é isso que separa os dois grandes tipos de célula.</p>
+    </div>
+  </section>
+  <section id="cap-03" data-chapter="03" data-title="Procarionte × Eucarionte" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">03</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Tipos celulares</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Procarionte × Eucarionte</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 12px;text-wrap:pretty">Para classificar uma célula nesses dois grupos, basta uma pergunta.</p>
+      <p style="margin:0 0 24px;font:600 clamp(40px,11vw,76px)/1 var(--fh);letter-spacing:-.01em;color:var(--c-nucleo)">ONDE ESTÁ O DNA?</p>
+      <button type="button" data-noprint="" onClick="{{ toggleDna }}" aria-pressed="{{ dnaOn }}" style="min-height:48px;padding:8px 18px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer;margin-bottom:24px">{{ dnaLabel }}</button>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:32px">
+        <figure style="margin:0">
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Ex.: bactéria</p>
+          <p style="margin:0 0 12px;font:600 34px/1 var(--fh)">Procarionte</p>
+          <div class="blueprint" style="padding:12px">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <svg viewBox="0 0 300 214" role="img" aria-label="Célula procarionte: parede celular, membrana, DNA solto no nucleoide, plasmídeo, ribossomos e flagelo" style="display:block;width:100%;height:auto;--o-dna: {{ oDna }};--o-other: {{ oOther }}">
+              <use href="#s-proc" x="0" y="22" width="300" height="170"></use>
+              <g style="font:600 12px var(--fh);fill:var(--ink)">
+                <text x="6" y="14">Parede celular</text><text x="294" y="14" text-anchor="end">Membrana plasmática</text>
+                <text x="150" y="210" text-anchor="middle" style="fill:var(--c-nucleo)">Nucleoide (DNA, sem membrana)</text>
+                <text x="6" y="210">Ribossomos</text><text x="294" y="186" text-anchor="end">Plasmídeo</text>
+              </g>
+              <g style="stroke:var(--ink);stroke-width:1"><path d="M40 18 L50 58"></path><path d="M250 18 L234 68"></path><path d="M150 198 L150 136"></path><path d="M30 198 L52 122"></path><path d="M256 178 L212 126"></path></g>
+            </svg>
+          </div>
+        </figure>
+        <figure style="margin:0">
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Ex.: animais, plantas, fungos</p>
+          <p style="margin:0 0 12px;font:600 34px/1 var(--fh)">Eucarionte</p>
+          <div class="blueprint" style="padding:12px">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <svg viewBox="0 0 300 214" role="img" aria-label="Célula eucarionte: DNA dentro de um núcleo com membrana, além de organelas membranosas" style="display:block;width:100%;height:auto;--o-dna: {{ oDna }};--o-other: {{ oOther }}">
+              <use href="#s-euca" x="0" y="22" width="300" height="170"></use>
+              <g style="font:600 12px var(--fh);fill:var(--ink)">
+                <text x="6" y="14">Membrana plasmática</text><text x="294" y="14" text-anchor="end">Organelas membranosas</text>
+                <text x="110" y="210" text-anchor="middle" style="fill:var(--c-nucleo)">Núcleo (DNA dentro, com membrana)</text>
+              </g>
+              <g style="stroke:var(--ink);stroke-width:1"><path d="M40 18 L52 50"></path><path d="M250 18 L224 60"></path><path d="M110 198 L110 150"></path></g>
+            </svg>
+          </div>
+        </figure>
+      </div>
+      <div style="margin:36px 0 0;max-width:860px" role="table" aria-label="Comparação entre procariontes e eucariontes">
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:0 0 8px;border-bottom:2px solid var(--ink);font:600 13px/1.2 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)"><span role="columnheader"></span><span role="columnheader">Procarionte</span><span role="columnheader">Eucarionte</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font:400 15px/1.45 var(--fb)"><span role="rowheader" style="font:600 17px/1.2 var(--fh)">Núcleo</span><span role="cell"><strong>Não tem</strong> núcleo delimitado por membrana</span><span role="cell"><strong>Tem</strong> núcleo com envoltório nuclear</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font:400 15px/1.45 var(--fb)"><span role="rowheader" style="font:600 17px/1.2 var(--fh)">DNA</span><span role="cell">No citoplasma, na região do nucleoide</span><span role="cell">Dentro do núcleo</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font:400 15px/1.45 var(--fb)"><span role="rowheader" style="font:600 17px/1.2 var(--fh)">Organelas membranosas</span><span role="cell">Não tem (sem mitocôndria, RE, Golgi)</span><span role="cell">Tem vários compartimentos</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font:400 15px/1.45 var(--fb)"><span role="rowheader" style="font:600 17px/1.2 var(--fh)">Ribossomos</span><span role="cell"><strong>Tem</strong></span><span role="cell"><strong>Tem</strong></span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(96px,1fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font:400 15px/1.45 var(--fb)"><span role="rowheader" style="font:600 17px/1.2 var(--fh)">Exemplos</span><span role="cell">Bactérias (eubactérias)</span><span role="cell">Animais, plantas, fungos e protozoários</span></div>
+      </div>
+      <div style="margin:40px 0 0;max-width:720px">
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+        <p style="margin:0 0 10px;font:600 clamp(30px,8vw,46px)/1.05 var(--fh)"><span style="color:var(--c-nucleo)">EU</span> tenho núcleo → <span style="color:var(--c-nucleo)">EU</span>carionte</p>
+        <p style="margin:0;font:400 15px/1.55 var(--fb);color:var(--muted);text-wrap:pretty">Isso é só um truque de memória, não a origem da palavra. A origem real vem do grego: <em>eu</em> = verdadeiro e <em>káryon</em> = núcleo, ou seja, “núcleo verdadeiro”. <em>Pro</em> = antes: procarionte é “antes do núcleo”.</p>
+      </div>
+      <details style="margin:28px 0 0;max-width:720px;border:1px solid var(--line2)">
+        <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Eubactérias, parede e plasmídeos</summary>
+        <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0 0 10px"><strong>Eubactérias</strong> significa “bactérias verdadeiras”. Existe outro grupo de procariontes, as <strong>arqueas</strong>, que também não têm núcleo.</p><p style="margin:0">A maioria das bactérias tem <strong>parede celular</strong> (de um material chamado peptidoglicano) por fora da membrana. Além do DNA principal no nucleoide, muitas têm <strong>plasmídeos</strong>: pequenos anéis extras de DNA.</p></div>
+      </details>
+      <dc-import name="Quiz" qid="q2" hint-size="100%,420px"></dc-import>
+      <dc-import name="Quiz" qid="q3" hint-size="100%,260px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-04" data-chapter="04" data-title="Animal × Vegetal × Fungos" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">04</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Tipos celulares</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Animal × Vegetal × Fungos</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 32px;text-wrap:pretty">Os três são eucariontes: têm núcleo, organelas membranosas e mitocôndrias. As diferenças estão no que cada um tem <em>a mais</em>, principalmente do lado de fora da membrana.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:28px">
+        <figure style="margin:0">
+          <div class="blueprint" style="padding:10px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <svg viewBox="0 0 200 170" role="img" aria-label="Célula animal: sem parede, com núcleo, mitocôndrias e lisossomos" style="display:block;width:100%;height:auto">
+              <path d="M100 14 C 160 12, 188 50, 186 88 S 150 160, 98 158 S 12 130, 14 86 S 44 16, 100 14Z" style="fill:color-mix(in oklch, var(--accent) 7%, transparent);stroke:var(--accent);stroke-width:5"></path>
+              <path d="M100 14 C 160 12, 188 50, 186 88 S 150 160, 98 158 S 12 130, 14 86 S 44 16, 100 14Z" style="fill:none;stroke:var(--bg);stroke-width:1.6"></path>
+              <use href="#s-nucleo" x="64" y="52" width="60" height="60"></use>
+              <use href="#s-mito" x="128" y="40" width="40" height="20"></use><use href="#s-mito" x="40" y="118" width="38" height="18"></use>
+              <use href="#s-liso" x="132" y="104" width="18" height="18"></use><use href="#s-liso" x="38" y="60" width="14" height="14"></use>
+              <use href="#s-golgi" x="96" y="118" width="30" height="25"></use>
+            </svg>
+          </div>
+          <figcaption style="margin-top:12px"><span style="display:block;font:600 28px/1 var(--fh);color:var(--ink)">Célula animal</span><span style="display:block;margin-top:6px;font:400 15px/1.5 var(--fb);color:var(--muted)">Só a membrana por fora: forma variável. Lisossomos bem presentes. Reserva: glicogênio.</span></figcaption>
+        </figure>
+        <figure style="margin:0">
+          <div class="blueprint" style="padding:10px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <svg viewBox="0 0 200 170" role="img" aria-label="Célula vegetal: parede celular, grande vacúolo central, cloroplastos, núcleo e mitocôndria" style="display:block;width:100%;height:auto">
+              <rect x="12" y="14" width="176" height="142" style="fill:none;stroke:var(--c-parede);stroke-width:7"></rect>
+              <rect x="20" y="22" width="160" height="126" style="fill:color-mix(in oklch, var(--accent) 7%, transparent);stroke:var(--accent);stroke-width:3"></rect>
+              <rect x="50" y="38" width="112" height="84" rx="22" style="fill:color-mix(in oklch, var(--c-agua) 24%, var(--bg));stroke:var(--c-agua);stroke-width:1.5"></rect>
+              <use href="#s-nucleo" x="23" y="25" width="34" height="34"></use>
+              <use href="#s-cloro" x="24" y="108" width="36" height="18"></use><use href="#s-cloro" x="140" y="126" width="34" height="17"></use><use href="#s-cloro" x="146" y="24" width="30" height="15"></use>
+              <use href="#s-mito" x="76" y="128" width="30" height="15"></use>
+              <text x="106" y="84" text-anchor="middle" style="font:600 11px var(--fh);fill:var(--ink)">vacúolo</text>
+            </svg>
+          </div>
+          <figcaption style="margin-top:12px"><span style="display:block;font:600 28px/1 var(--fh);color:var(--ink)">Célula vegetal</span><span style="display:block;margin-top:6px;font:400 15px/1.5 var(--fb);color:var(--muted)">Parede de celulose, cloroplastos (nas células que fazem fotossíntese) e grande vacúolo central. Reserva: amido.</span></figcaption>
+        </figure>
+        <figure style="margin:0">
+          <div class="blueprint" style="padding:10px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <svg viewBox="0 0 200 170" role="img" aria-label="Células de fungo em uma hifa: parede de quitina, septo, núcleos, mitocôndrias, sem cloroplastos, grânulos de glicogênio" style="display:block;width:100%;height:auto">
+              <rect x="8" y="40" width="184" height="90" rx="14" style="fill:none;stroke:var(--c-parede);stroke-width:7"></rect>
+              <rect x="8" y="40" width="184" height="90" rx="14" style="fill:none;stroke:var(--bg);stroke-width:2"></rect>
+              <rect x="16" y="48" width="168" height="74" rx="9" style="fill:color-mix(in oklch, var(--accent) 7%, transparent);stroke:var(--accent);stroke-width:2.5"></rect>
+              <path d="M100 44 V78 M100 92 V126" style="stroke:var(--c-parede);stroke-width:5"></path>
+              <use href="#s-nucleo" x="34" y="66" width="34" height="34"></use><use href="#s-nucleo" x="130" y="66" width="34" height="34"></use>
+              <use href="#s-mito" x="70" y="100" width="26" height="13"></use><use href="#s-mito" x="104" y="54" width="24" height="12"></use>
+              <circle cx="82" cy="64" r="7" style="fill:color-mix(in oklch, var(--c-agua) 24%, var(--bg));stroke:var(--c-agua);stroke-width:1.2"></circle>
+              <g style="fill:var(--ink)"><circle cx="54" cy="110" r="1.8"></circle><circle cx="60" cy="104" r="1.8"></circle><circle cx="170" cy="110" r="1.8"></circle><circle cx="176" cy="102" r="1.8"></circle><circle cx="116" cy="112" r="1.8"></circle></g>
+              <text x="100" y="152" text-anchor="middle" style="font:600 11px var(--fh);fill:var(--ink)">hifa (fio de células)</text>
+            </svg>
+          </div>
+          <figcaption style="margin-top:12px"><span style="display:block;font:600 28px/1 var(--fh);color:var(--ink)">Célula de fungo</span><span style="display:block;margin-top:6px;font:400 15px/1.5 var(--fb);color:var(--muted)">Parede de quitina, sem cloroplastos. Reserva: glicogênio (pontinhos escuros).</span></figcaption>
+        </figure>
+      </div>
+      <div role="table" aria-label="Comparação entre células animal, vegetal e de fungo" style="margin:40px 0 0;max-width:900px">
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding-bottom:8px;border-bottom:2px solid var(--ink);font:600 13px/1.2 var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)"><span role="columnheader"></span><span role="columnheader">Animal</span><span role="columnheader">Vegetal</span><span role="columnheader">Fungo</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Núcleo e mitocôndrias</span><span role="cell">✓ Sim</span><span role="cell">✓ Sim</span><span role="cell">✓ Sim</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Parede celular</span><span role="cell">— Não</span><span role="cell">✓ Celulose</span><span role="cell">✓ Quitina</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Cloroplastos</span><span role="cell">— Não</span><span role="cell">✓ Nas células fotossintetizantes</span><span role="cell">— Não</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Vacúolo</span><span role="cell">Pequenos, quando presentes</span><span role="cell">Grande vacúolo central</span><span role="cell">Presentes</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Reserva de energia</span><span role="cell">Glicogênio</span><span role="cell">Amido</span><span role="cell">Glicogênio</span></div>
+        <div role="row" style="display:grid;grid-template-columns:minmax(86px,1.1fr) repeat(3,minmax(0,1fr));gap:8px;padding:11px 0;border-bottom:1px solid var(--line);font:400 14px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Nutrição</span><span role="cell">Heterótrofa</span><span role="cell">Autótrofa (fotossíntese)</span><span role="cell">Heterótrofa, por absorção</span></div>
+      </div>
+      <div style="margin:40px 0 0;max-width:720px">
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+        <p style="margin:0;font:600 clamp(26px,7vw,38px)/1.1 var(--fh);text-wrap:balance">O fungo se veste como planta (tem parede) e come como bicho (é heterótrofo e guarda glicogênio).</p>
+      </div>
+      <div style="margin:32px 0 0;max-width:720px;border-top:1px solid var(--ink);padding-top:14px">
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+        <ul style="margin:0;padding-left:18px;display:grid;gap:8px;font:400 17px/1.55 var(--fb)">
+          <li><strong>Fungo não é planta.</strong> Não tem cloroplasto, não faz fotossíntese e sua parede não é de celulose.</li>
+          <li><strong>Nem toda célula vegetal tem cloroplastos.</strong> As células da raiz, por exemplo, geralmente não têm, porque não recebem luz.</li>
+          <li><strong>Plantas também têm mitocôndrias.</strong> Fazem fotossíntese e respiração celular.</li>
+        </ul>
+      </div>
+      <dc-import name="Quiz" qid="q4" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-05" data-chapter="05" data-title="A cidade celular" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">05</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Organelas</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">A cidade celular</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 12px;text-wrap:pretty">Agora entre na célula. Uma célula eucariótica funciona como uma pequena cidade: cada setor tem uma função, e todos dependem uns dos outros.</p>
+      <p style="font:400 15px/1.5 var(--fb);max-width:680px;margin:0 0 28px;color:var(--muted)">A analogia ajuda a lembrar, mas não é a definição. Em cada estrutura você vai ver também a explicação biológica e onde a analogia falha.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px 48px;align-items:start">
+        <div>
+          <div class="blueprint" style="padding:14px 8px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <dc-import name="CellMap" highlight="{{ city }}" on-pick="{{ cityPick }}" hint-size="100%,300px"></dc-import>
+          </div>
+          <p data-noprint="" style="margin:10px 0 0;font:400 14px/1.4 var(--fb);color:var(--muted)">Toque numa estrutura do desenho ou num nome abaixo.</p>
+          <div data-noprint="" role="group" aria-label="Estruturas da célula" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+            <sc-for list="{{ cityChips }}" as="c" hint-placeholder-count="9">
+              <button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.on }}" style="min-height:40px;padding:6px 12px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font:600 15px/1 var(--fh);cursor:pointer">{{ c.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div aria-live="polite" style="border-top:2px solid var(--ink);padding-top:16px">
+          <p style="margin:0 0 14px;font:600 clamp(30px,8vw,44px)/1 var(--fh)">{{ cityName }}</p>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Na cidade</p>
+          <p style="margin:0 0 18px;font:500 19px/1.45 var(--fb)">{{ cityAnalogy }}</p>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Na biologia</p>
+          <p style="margin:0 0 18px;font:400 17px/1.55 var(--fb)">{{ cityBio }}</p>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)">Limite da analogia</p>
+          <p style="margin:0;font:400 15px/1.55 var(--fb);color:var(--muted)">{{ cityLimit }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="cap-06" data-chapter="06" data-title="Conhecendo as organelas" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">06</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Organelas</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Conhecendo as organelas</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 28px;text-wrap:pretty">Cinco estruturas caem na prova. Para cada uma: o que é, onde está, o que faz e como lembrar. Repare na forma e na cor de cada uma: elas serão sempre as mesmas daqui até o fim.</p>
+      <div id="org-top" data-noprint="" role="group" aria-label="Escolha a organela" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:32px">
+        <sc-for list="{{ orgTabs }}" as="t" hint-placeholder-count="5">
+          <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;min-height:78px;padding:8px 2px;border:1px solid {{ t.border }};border-width:{{ t.bw }};background:{{ t.bg }};color:var(--ink);cursor:pointer;font:600 14px/1 var(--fh)">
+            <svg width="44" height="30" viewBox="{{ t.vb }}" aria-hidden="true" style="overflow:visible"><use href="{{ t.sym }}"></use></svg>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">{{ t.name }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <article data-org="" aria-label="Ribossomo" style="display: {{ orgDisp.ribo }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:28px 48px;align-items:start">
+          <div>
+            <div class="blueprint" style="padding:24px;display:grid;place-items:center;min-height:220px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <svg viewBox="0 0 120 64" role="img" aria-label="Ribossomo com duas subunidades lendo o RNA mensageiro e liberando uma cadeia de proteína" style="width:100%;max-width:340px;height:auto">
+                <path d="M4 50 H116" style="stroke:var(--c-nucleo);stroke-width:2;stroke-dasharray:4 2"></path>
+                <use href="#s-ribo" x="14" y="16" width="36" height="36"></use>
+                <use href="#s-prot" x="50" y="18" width="56" height="20"></use>
+                <text x="116" y="60" text-anchor="end" style="font:600 7px var(--fh);fill:var(--c-nucleo)">RNA mensageiro</text>
+                <text x="78" y="14" text-anchor="middle" style="font:600 7px var(--fh);fill:var(--ink)">proteína</text>
+              </svg>
+            </div>
+            <p style="margin:10px 0 0;font:400 14px/1.45 var(--fb);color:var(--muted)">Forma para lembrar: grão âmbar de duas partes. A cadeia âmbar que sai dele é a proteína, sempre com a mesma cor de quem a fabricou.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">1 de 5 · não tem membrana</p>
+            <h3 style="font:600 clamp(42px,12vw,64px)/.95 var(--fh);margin:0 0 14px;color:var(--ink)">Ribossomo</h3>
+            <p style="margin:0 0 18px;font:500 20px/1.4 var(--fb)">O que faz: <strong>síntese de proteínas.</strong></p>
+            <dl style="display:grid;gap:14px;margin:0">
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Por que esse nome?</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)"><em>Ribo</em> vem de RNA ribossômico (ácido ribonucleico), o material de que ele é feito junto com proteínas; <em>soma</em> = corpo.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Onde está</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Livre no citoplasma ou preso à membrana do RER. Existe em <strong>todas</strong> as células, inclusive nas bactérias.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Na cidade</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">A linha de montagem que segue uma receita.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 4px">Na biologia</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Lê a mensagem do RNA mensageiro e une aminoácidos na ordem certa, formando a proteína. Ribossomos livres fazem proteínas que ficam no citoplasma; os presos ao RER fazem proteínas que serão exportadas, irão para membranas ou para lisossomos.</dd></div>
+            </dl>
+            <div style="margin:24px 0 0">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+              <p style="margin:0;font:600 26px/1.15 var(--fh)">Todo ser vivo faz proteína → todo ser vivo tem ribossomo.</p>
+            </div>
+            <div style="margin:22px 0 0;border-top:1px solid var(--ink);padding-top:12px">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+              <p style="margin:0;font:400 16px/1.55 var(--fb)"><strong>RIBOssomo</strong> constrói proteínas; <strong>LISOssomo</strong> quebra moléculas. Nomes parecidos, funções quase opostas.</p>
+            </div>
+            <details data-noprint="" style="margin:22px 0 0;border:1px solid var(--line2)">
+              <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;min-height:48px;padding:0 14px;font:600 16px/1.2 var(--fh)">Pense: por que bactérias têm ribossomo, mas não têm RER? <span style="margin-left:auto;padding-left:8px;color:var(--accent-ink)">ver</span></summary>
+              <p style="margin:0;padding:0 14px 14px;font:400 16px/1.55 var(--fb)">Porque o ribossomo não tem membrana, e o RER é uma organela membranosa. Procariontes não têm organelas membranosas.</p>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <article data-org="" aria-label="Retículo endoplasmático rugoso" style="display: {{ orgDisp.rer }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:28px 48px;align-items:start">
+          <div>
+            <div class="blueprint" style="padding:24px;display:grid;place-items:center;min-height:220px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <svg viewBox="0 0 124 76" role="img" aria-label="Retículo endoplasmático rugoso: sacos achatados cobertos de ribossomos" style="width:100%;max-width:340px;height:auto"><use href="#s-rer"></use></svg>
+            </div>
+            <p style="margin:10px 0 0;font:400 14px/1.45 var(--fb);color:var(--muted)">Forma para lembrar: sacos achatados azuis, cobertos de grãos âmbar (ribossomos).</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">2 de 5 · organela membranosa</p>
+            <h3 style="font:600 clamp(42px,12vw,64px)/.95 var(--fh);margin:0 0 6px">RER</h3>
+            <p style="margin:0 0 14px;font:600 20px/1.2 var(--fh);color:var(--muted)">Retículo endoplasmático rugoso</p>
+            <p style="margin:0 0 18px;font:500 20px/1.4 var(--fb)">O que faz: <strong>produção e processamento de proteínas</strong> (com os ribossomos presos a ele).</p>
+            <dl style="display:grid;gap:14px;margin:0">
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Por que esse nome?</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)"><em>Retículo</em> = pequena rede. <em>Endoplasmático</em> = dentro do citoplasma. <em>Rugoso</em> = áspero, por causa dos ribossomos grudados na superfície.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Onde está</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Ao redor do núcleo: sua membrana é contínua com o envoltório nuclear. Só em eucariontes.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Na cidade</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Galpões com linhas de montagem instaladas nas paredes e corredores internos.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 4px">Na biologia</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Os ribossomos aderidos produzem proteínas que entram no interior do RER, onde são dobradas e modificadas. Daí seguem em vesículas para o Golgi. São proteínas destinadas, entre outros lugares, à secreção, às membranas e aos lisossomos. Células que secretam muita proteína (como as do pâncreas, que fazem enzimas digestivas) têm RER muito desenvolvido.</dd></div>
+            </dl>
+            <div style="margin:24px 0 0">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+              <p style="margin:0;font:600 26px/1.15 var(--fh)"><span style="color:var(--c-rer)">R</span>ugoso → <span style="color:var(--c-rer)">R</span>ibossomos → p<span style="color:var(--c-rer)">R</span>oteínas</p>
+            </div>
+            <div style="margin:22px 0 0;border-top:1px solid var(--ink);padding-top:12px">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+              <p style="margin:0;font:400 16px/1.55 var(--fb)">Quem <strong>monta</strong> a proteína é o ribossomo. O RER <strong>recebe, dobra, modifica e transporta</strong>. Um depende do outro.</p>
+            </div>
+            <details data-noprint="" style="margin:22px 0 0;border:1px solid var(--line2)">
+              <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;min-height:48px;padding:0 14px;font:600 16px/1.2 var(--fh)">Pense: se o RER perdesse seus ribossomos, o que ele deixaria de fazer? <span style="margin-left:auto;padding-left:8px;color:var(--accent-ink)">ver</span></summary>
+              <p style="margin:0;padding:0 14px 14px;font:400 16px/1.55 var(--fb)">Deixaria de receber proteínas recém-produzidas para exportação. As proteínas de secreção dependem de ribossomos presos ao RER.</p>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <article data-org="" aria-label="Retículo endoplasmático liso" style="display: {{ orgDisp.rel }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:28px 48px;align-items:start">
+          <div>
+            <div class="blueprint" style="padding:24px;display:grid;place-items:center;min-height:220px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <svg viewBox="0 0 124 76" role="img" aria-label="Retículo endoplasmático liso: rede de tubos sem ribossomos" style="width:100%;max-width:340px;height:auto"><use href="#s-rel"></use></svg>
+            </div>
+            <p style="margin:10px 0 0;font:400 14px/1.45 var(--fb);color:var(--muted)">Forma para lembrar: tubos verde-azulados, lisos, sem nenhum grão.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">3 de 5 · organela membranosa</p>
+            <h3 style="font:600 clamp(42px,12vw,64px)/.95 var(--fh);margin:0 0 6px">REL</h3>
+            <p style="margin:0 0 14px;font:600 20px/1.2 var(--fh);color:var(--muted)">Retículo endoplasmático liso</p>
+            <p style="margin:0 0 18px;font:500 20px/1.4 var(--fb)">O que faz: <strong>síntese de lipídios.</strong> Também atua na desintoxicação, entre outras funções que variam conforme o tipo de célula.</p>
+            <dl style="display:grid;gap:14px;margin:0">
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Por que esse nome?</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)"><em>Liso</em> porque não tem ribossomos na superfície.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Onde está</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">No citoplasma, como continuação do RER. Muito desenvolvido nas células do fígado e nas glândulas que produzem hormônios esteroides.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Na cidade</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">A refinaria de gorduras e a estação de tratamento.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 4px">Na biologia</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Produz lipídios, como os fosfolipídios das membranas e os hormônios esteroides (testosterona, estrogênio). No fígado, participa da desintoxicação de substâncias como álcool e alguns medicamentos. Nas células musculares, armazena cálcio, importante para a contração.</dd></div>
+            </dl>
+            <div style="margin:24px 0 0">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+              <p style="margin:0;font:600 26px/1.15 var(--fh)"><span style="color:var(--c-rel)">L</span>iso → <span style="color:var(--c-rel)">L</span>ipídios</p>
+            </div>
+            <div style="margin:22px 0 0;border-top:1px solid var(--ink);padding-top:12px">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+              <p style="margin:0;font:400 16px/1.55 var(--fb)">Hormônio <strong>esteroide</strong> (lipídio) → REL. <strong>Insulina</strong> (proteína) → ribossomos do RER. E retículo <strong>liso</strong> não é <strong>lisossomo</strong>.</p>
+            </div>
+            <details data-noprint="" style="margin:22px 0 0;border:1px solid var(--line2)">
+              <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;min-height:48px;padding:0 14px;font:600 16px/1.2 var(--fh)">Pense: por que o REL é tão desenvolvido no fígado? <span style="margin-left:auto;padding-left:8px;color:var(--accent-ink)">ver</span></summary>
+              <p style="margin:0;padding:0 14px 14px;font:400 16px/1.55 var(--fb)">O fígado é o principal órgão de desintoxicação do corpo, e essa é uma das funções do REL.</p>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <article data-org="" aria-label="Complexo golgiense" style="display: {{ orgDisp.golgi }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:28px 48px;align-items:start">
+          <div>
+            <div class="blueprint" style="padding:24px;display:grid;place-items:center;min-height:220px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <svg viewBox="0 0 110 90" role="img" aria-label="Complexo golgiense: pilha de sacos achatados e curvos com vesículas nas bordas" style="width:100%;max-width:280px;height:auto"><use href="#s-golgi"></use></svg>
+            </div>
+            <p style="margin:10px 0 0;font:400 14px/1.45 var(--fb);color:var(--muted)">Forma para lembrar: pilha magenta de sacos curvos, com vesículas se soltando das bordas.</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">4 de 5 · organela membranosa</p>
+            <h3 style="font:600 clamp(42px,12vw,64px)/.95 var(--fh);margin:0 0 14px">Complexo golgiense</h3>
+            <p style="margin:0 0 18px;font:500 20px/1.4 var(--fb)">O que faz: <strong>modifica, organiza, empacota e direciona</strong> substâncias.</p>
+            <dl style="display:grid;gap:14px;margin:0">
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Por que esse nome?</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Homenagem ao cientista italiano Camillo Golgi, que o descreveu em 1898. Também é chamado de complexo de Golgi.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Onde está</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Geralmente perto do núcleo e do RER. É formado por pilhas de sacos achatados, as cisternas.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Na cidade</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">O centro de correios: recebe, confere, embala e despacha.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 4px">Na biologia</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Recebe vesículas vindas do RER. Modifica as proteínas (por exemplo, acrescentando açúcares), separa, empacota em novas vesículas e as direciona: para fora da célula (secreção), para a membrana ou para formar lisossomos.</dd></div>
+            </dl>
+            <div style="margin:24px 0 0">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+              <p style="margin:0;font:600 26px/1.15 var(--fh)">O Golgi trabalha por <span style="color:var(--c-golgi)">MOED</span>a: <span style="color:var(--c-golgi)">M</span>odifica, <span style="color:var(--c-golgi)">O</span>rganiza, <span style="color:var(--c-golgi)">E</span>mpacota, <span style="color:var(--c-golgi)">D</span>ireciona.</p>
+            </div>
+            <div style="margin:22px 0 0;border-top:1px solid var(--ink);padding-top:12px">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+              <p style="margin:0;font:400 16px/1.55 var(--fb)">O Golgi <strong>não fabrica</strong> a proteína do zero: ele recebe a proteína pronta do RER e cuida do acabamento e da entrega.</p>
+            </div>
+            <details data-noprint="" style="margin:22px 0 0;border:1px solid var(--line2)">
+              <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;min-height:48px;padding:0 14px;font:600 16px/1.2 var(--fh)">Pense: de onde vêm os lisossomos? <span style="margin-left:auto;padding-left:8px;color:var(--accent-ink)">ver</span></summary>
+              <p style="margin:0;padding:0 14px 14px;font:400 16px/1.55 var(--fb)">Do complexo golgiense: ele empacota enzimas digestivas (produzidas no RER) em vesículas, que são os lisossomos.</p>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <article data-org="" aria-label="Lisossomo" style="display: {{ orgDisp.liso }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:28px 48px;align-items:start">
+          <div>
+            <div class="blueprint" style="padding:24px;display:grid;place-items:center;min-height:220px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+              <svg viewBox="0 0 40 40" role="img" aria-label="Lisossomo: vesícula arredondada cheia de enzimas digestivas" style="width:60%;max-width:180px;height:auto"><use href="#s-liso"></use></svg>
+            </div>
+            <p style="margin:10px 0 0;font:400 14px/1.45 var(--fb);color:var(--muted)">Forma para lembrar: bolsinha laranja cheia de pontos (as enzimas digestivas).</p>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">5 de 5 · organela membranosa</p>
+            <h3 style="font:600 clamp(42px,12vw,64px)/.95 var(--fh);margin:0 0 14px">Lisossomo</h3>
+            <p style="margin:0 0 18px;font:500 20px/1.4 var(--fb)">O que faz: <strong>digestão intracelular</strong>, degradação e reciclagem de materiais.</p>
+            <dl style="display:grid;gap:14px;margin:0">
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Por que esse nome?</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)"><em>Lise</em> = quebra, dissolução; <em>soma</em> = corpo. Lisossomo é o “corpo que quebra”.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Onde está</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">Espalhado pelo citoplasma. Forma-se a partir do complexo golgiense. É típico de células animais; nas plantas, o vacúolo realiza funções parecidas.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px">Na cidade</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">O centro de reciclagem.</dd></div>
+              <div><dt style="font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 4px">Na biologia</dt><dd style="margin:0;font:400 16px/1.55 var(--fb)">É uma vesícula com enzimas digestivas. Digere materiais que vieram de fora, como uma bactéria englobada por um glóbulo branco (<strong>heterofagia</strong>), e partes velhas da própria célula (<strong>autofagia</strong>). Os produtos da digestão são reaproveitados.</dd></div>
+            </dl>
+            <div style="margin:24px 0 0">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+              <p style="margin:0;font:600 26px/1.15 var(--fh)"><span style="color:var(--c-liso)">LISE</span> = quebrar → <span style="color:var(--c-liso)">LISO</span>ssomo digere</p>
+            </div>
+            <div style="margin:22px 0 0;border-top:1px solid var(--ink);padding-top:12px">
+              <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+              <p style="margin:0;font:400 16px/1.55 var(--fb)"><strong>Lisossomo</strong> não tem nada a ver com “liso”. Quem é liso (sem ribossomos) é o <strong>REL</strong>, que produz lipídios.</p>
+            </div>
+            <details data-noprint="" style="margin:22px 0 0;border:1px solid var(--line2)">
+              <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;min-height:48px;padding:0 14px;font:600 16px/1.2 var(--fh)">Pense: por que as enzimas do lisossomo não digerem a célula inteira? <span style="margin-left:auto;padding-left:8px;color:var(--accent-ink)">ver</span></summary>
+              <p style="margin:0;padding:0 14px 14px;font:400 16px/1.55 var(--fb)">Porque ficam presas dentro da membrana do lisossomo, que as separa do resto do citoplasma.</p>
+            </details>
+          </div>
+        </div>
+      </article>
+
+      <div data-noprint="" style="margin:32px 0 0">
+        <button type="button" onClick="{{ nextOrg }}" style="min-height:48px;padding:8px 20px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer" style-hover="background: var(--hover)">Próxima: {{ nextOrgName }} →</button>
+      </div>
+      <dc-import name="Quiz" qid="q5" hint-size="100%,420px"></dc-import>
+      <p style="margin:48px 0 0;max-width:620px;font:500 italic 20px/1.5 var(--fb);color:var(--muted);text-wrap:pretty">Você acabou de conhecer as principais estruturas. Vamos ver se elas ficaram na memória?</p>
+      <dc-import name="QuemSouEu" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-07" data-chapter="07" data-title="A viagem de uma proteína" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">07</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Organelas</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">A viagem de uma proteína</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 28px;text-wrap:pretty">Ribossomo, RER e Golgi não trabalham separados: são etapas de uma mesma linha de produção. Acompanhe uma proteína que será exportada pela célula.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:28px 48px;align-items:start">
+        <div class="blueprint" style="padding:12px 6px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="0 0 380 240" role="img" aria-label="Caminho da proteína de secreção: núcleo, RNA mensageiro, ribossomo no RER, vesícula, complexo golgiense, vesícula e membrana plasmática" style="display:block;width:100%;height:auto">
+            <rect x="350" y="0" width="30" height="240" style="fill:color-mix(in oklch, var(--accent) 5%, transparent)"></rect>
+            <g style="opacity: {{ jMem }};transition:opacity .5s">
+              <path d="M340 0 C 356 70, 356 170, 340 240" style="fill:none;stroke:var(--accent);stroke-width:7"></path>
+              <path d="M340 0 C 356 70, 356 170, 340 240" style="fill:none;stroke:var(--bg);stroke-width:2.2"></path>
+            </g>
+            <g style="opacity: {{ jNuc }};transition:opacity .5s"><use href="#s-nucleo" x="8" y="70" width="104" height="104"></use></g>
+            <g style="opacity: {{ jMrna }};transition:opacity .5s"><path d="M92 110 C 104 100, 112 116, 124 104 S 132 88, 134 78" style="fill:none;stroke:var(--c-nucleo);stroke-width:2.4;stroke-dasharray:3 2"></path></g>
+            <g style="opacity: {{ jRer }};transition:opacity .5s"><use href="#s-rer" x="120" y="62" width="110" height="67"></use></g>
+            <g style="opacity: {{ jRibo }};transition:opacity .5s"><circle cx="137" cy="68" r="9" style="fill:none;stroke:var(--c-ribo);stroke-width:2"></circle></g>
+            <g style="opacity: {{ jGolgi }};transition:opacity .5s"><use href="#s-golgi" x="250" y="66" width="80" height="65"></use></g>
+            <g style="font:600 12px var(--fh);fill:var(--ink)">
+              <text x="60" y="192" text-anchor="middle">Núcleo</text><text x="96" y="62" style="fill:var(--c-nucleo)">RNAm</text>
+              <text x="175" y="148" text-anchor="middle">RER</text><text x="290" y="150" text-anchor="middle">Golgi</text>
+              <text x="346" y="232" text-anchor="end">Membrana</text><text x="376" y="14" text-anchor="end" style="font-size:10px">fora</text>
+            </g>
+            <g style="transform: translate({{ tokX }}px, {{ tokY }}px);opacity: {{ tokOp }};transition:transform 1s ease, opacity .4s">
+              <circle cx="0" cy="0" r="13" style="fill:none;stroke:var(--c-golgi);stroke-width:2.5;opacity: {{ ringOp }};transition:opacity .4s"></circle>
+              <use href="#s-prot" x="-12" y="-4.5" width="24" height="9"></use>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div role="group" aria-label="Etapas da viagem" data-noprint="" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:18px">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="7">
+              <button type="button" onClick="{{ s.go }}" aria-label="{{ s.aria }}" aria-current="{{ s.on }}" style="min-height:44px;border:1px solid {{ s.border }};background:{{ s.bg }};color:var(--ink);font:600 15px/1 var(--fh);cursor:pointer">{{ s.n }}</button>
+            </sc-for>
+          </div>
+          <div aria-live="polite" style="min-height:170px">
+            <p style="margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Etapa {{ stepNum }} de 7</p>
+            <p style="margin:0 0 10px;font:600 clamp(28px,7vw,38px)/1.05 var(--fh)">{{ stepTitle }}</p>
+            <p style="margin:0;font:400 17px/1.6 var(--fb);text-wrap:pretty">{{ stepText }}</p>
+          </div>
+          <div data-noprint="" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
+            <button type="button" onClick="{{ prevStep }}" disabled="{{ prevDisabled }}" aria-label="Etapa anterior" style="min-height:48px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer">←</button>
+            <button type="button" onClick="{{ playSteps }}" style="flex:1;min-height:48px;padding:8px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--fh);letter-spacing:.03em;cursor:pointer">{{ playLabel }}</button>
+            <button type="button" onClick="{{ nextStep }}" disabled="{{ nextDisabled }}" aria-label="Próxima etapa" style="min-height:48px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer">→</button>
+          </div>
+        </div>
+      </div>
+      <div class="blueprint" style="padding:18px 20px;margin:36px 0 0;max-width:820px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Precisa saber</p>
+        <p style="margin:0;font:600 clamp(20px,5vw,26px)/1.35 var(--fh);letter-spacing:.01em">DNA → RNAm → ribossomo no RER → RER → vesícula → Golgi → vesícula → membrana</p>
+        <p style="margin:10px 0 0;font:400 16px/1.55 var(--fb);color:var(--muted)">Por isso uma célula que secreta muita proteína tem muitos ribossomos, RER abundante e Golgi bem desenvolvido.</p>
+      </div>
+      <dc-import name="Quiz" qid="q6" hint-size="100%,420px"></dc-import>
+      <p style="margin:48px 0 0;max-width:620px;font:500 italic 20px/1.5 var(--fb);color:var(--muted);text-wrap:pretty">Até aqui tudo aconteceu dentro da célula. Mas existe outra pergunta: como alguma coisa entra ou sai dela?</p>
+    </div>
+  </section>
+  <section id="cap-08" data-chapter="08" data-title="Membrana plasmática" data-pbreak="" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">08</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Membrana plasmática</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 28px;text-wrap:pretty">Vamos aproximar a borda da célula. Aquela linha dupla azul dos desenhos é, na verdade, uma camada dupla de moléculas.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px 48px;align-items:start">
+        <figure class="blueprint" style="margin:0;padding:12px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <svg viewBox="0 0 340 220" role="img" aria-label="Bicamada de fosfolipídios: cabeças voltadas para a água dos dois lados, caudas no meio, proteína de canal e proteína transportadora atravessando a membrana" style="display:block;width:100%;height:auto">
+            <rect x="0" y="0" width="340" height="88" style="fill:color-mix(in oklch, var(--c-agua) 10%, transparent)"></rect>
+            <rect x="0" y="132" width="340" height="88" style="fill:color-mix(in oklch, var(--accent) 6%, transparent)"></rect>
+            <rect x="0" y="88" width="340" height="44" style="fill:url(#p-bilayer)"></rect>
+            <g style="fill:var(--c-prot)"><rect x="53" y="80" width="12" height="60" rx="5"></rect><rect x="75" y="80" width="12" height="60" rx="5"></rect><rect x="134" y="76" width="34" height="68" rx="14"></rect></g>
+            <g style="font:600 12px var(--fh);fill:var(--ink)">
+              <text x="8" y="18" style="letter-spacing:.08em">MEIO EXTRACELULAR (fora)</text>
+              <text x="8" y="212" style="letter-spacing:.08em">MEIO INTRACELULAR (citoplasma)</text>
+              <text x="151" y="60" text-anchor="middle">Proteína transportadora</text>
+              <text x="70" y="176" text-anchor="middle">Proteína de canal</text>
+              <text x="236" y="40">Cabeça hidrofílica</text><text x="236" y="54" style="font-weight:400;font-size:11px;fill:var(--muted)">voltada para a água</text>
+              <text x="236" y="170">Caudas hidrofóbicas</text><text x="236" y="184" style="font-weight:400;font-size:11px;fill:var(--muted)">no meio, longe da água</text>
+            </g>
+            <g style="stroke:var(--ink);stroke-width:1;fill:none"><path d="M262 60 L258 88"></path><path d="M262 158 L258 116"></path><path d="M151 64 L151 76"></path><path d="M70 164 L70 142"></path></g>
+          </svg>
+        </figure>
+        <div>
+          <ul style="list-style:none;margin:0;padding:0;display:grid;gap:18px">
+            <li><p style="margin:0 0 4px;font:600 22px/1.1 var(--fh)">Bicamada de fosfolipídios</p><p style="margin:0;font:400 16px/1.55 var(--fb)">Cada fosfolipídio tem uma “cabeça” que se mistura com água e duas “caudas” que repelem a água. Por isso eles se organizam em duas camadas: cabeças para fora e para dentro, onde há água, e caudas escondidas no meio.</p></li>
+            <li><p style="margin:0 0 4px;font:600 22px/1.1 var(--fh)">Proteínas de membrana</p><p style="margin:0;font:400 16px/1.55 var(--fb)">Ficam mergulhadas na bicamada. Algumas formam canais ou transportam substâncias; outras funcionam como bombas que gastam energia.</p></li>
+            <li><p style="margin:0 0 4px;font:600 22px/1.1 var(--fh)">Seletividade</p><p style="margin:0;font:400 16px/1.55 var(--fb)">A membrana é <strong>seletivamente permeável</strong>: deixa algumas substâncias passarem com facilidade e dificulta ou impede a passagem de outras.</p></li>
+          </ul>
+        </div>
+      </div>
+      <details style="margin:28px 0 0;max-width:720px;border:1px solid var(--line2)">
+        <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Modelo do mosaico fluido</summary>
+        <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0">A membrana não é rígida: fosfolipídios e muitas proteínas se deslocam lateralmente, como num líquido (fluido), e as proteínas espalhadas lembram as peças de um mosaico. Na face externa há também açúcares ligados a lipídios e proteínas, formando o glicocálix, que participa do reconhecimento entre células.</p></div>
+      </details>
+      <dc-import name="Quiz" qid="q7" hint-size="100%,420px"></dc-import>
+
+      <h3 style="font:600 clamp(32px,8vw,48px)/1.02 var(--fh);margin:64px 0 12px;text-wrap:balance">Como as substâncias atravessam essa fronteira?</h3>
+      <p style="font:400 18px/1.55 var(--fb);max-width:680px;margin:0 0 24px;text-wrap:pretty">Antes dos quatro mecanismos, entenda a grande divisão. Tudo depende do <strong>gradiente de concentração</strong>: a diferença de concentração de uma substância entre dois lados. Pense numa ladeira: descer acontece sozinho; subir exige esforço.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;max-width:900px">
+        <div class="blueprint" style="padding:20px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Descer a ladeira</p>
+          <p style="margin:0 0 12px;font:600 32px/1 var(--fh)">Transporte passivo</p>
+          <svg viewBox="0 0 200 60" aria-hidden="true" style="width:100%;max-width:260px;height:auto;margin-bottom:10px"><path d="M10 12 L190 50" style="stroke:var(--ink);stroke-width:2;marker-end:url(#arr)"></path><g style="fill:var(--ink)"><circle cx="16" cy="6" r="3"></circle><circle cx="26" cy="4" r="3"></circle><circle cx="22" cy="14" r="3"></circle><circle cx="34" cy="10" r="3"></circle><circle cx="182" cy="40" r="3"></circle></g><text x="10" y="34" style="font:600 11px var(--fh);fill:var(--muted)">MAIOR</text><text x="190" y="30" text-anchor="end" style="font:600 11px var(--fh);fill:var(--muted)">MENOR</text></svg>
+          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font:400 16px/1.5 var(--fb)"><li>A favor do gradiente: <strong>maior → menor</strong></li><li><strong>Sem gasto direto de ATP</strong></li><li>Difusão simples, difusão facilitada e osmose</li></ul>
+        </div>
+        <div class="blueprint" style="padding:20px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Subir a ladeira</p>
+          <p style="margin:0 0 12px;font:600 32px/1 var(--fh)">Transporte ativo</p>
+          <svg viewBox="0 0 200 60" aria-hidden="true" style="width:100%;max-width:260px;height:auto;margin-bottom:10px"><path d="M10 50 L180 12" style="stroke:var(--ink);stroke-width:2;marker-end:url(#arr)"></path><use href="#s-atp" x="86" y="34" width="20" height="20"></use><g style="fill:var(--ink)"><circle cx="14" cy="42" r="3"></circle><circle cx="178" cy="4" r="3"></circle><circle cx="188" cy="10" r="3"></circle><circle cx="170" cy="0" r="3"></circle></g><text x="10" y="30" style="font:600 11px var(--fh);fill:var(--muted)">MENOR</text><text x="194" y="32" text-anchor="end" style="font:600 11px var(--fh);fill:var(--muted)">MAIOR</text></svg>
+          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font:400 16px/1.5 var(--fb)"><li>Contra o gradiente: <strong>menor → maior</strong></li><li><strong>Gasta energia (ATP)</strong></li><li>Usa proteínas transportadoras (bombas)</li></ul>
+        </div>
+      </div>
+      <details style="margin:24px 0 0;max-width:720px;border:1px solid var(--line2)">
+        <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Gradiente eletroquímico</summary>
+        <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0">Para partículas com carga elétrica (íons, como Na⁺ e K⁺), além da concentração conta também a diferença de carga entre os lados da membrana. Os livros chamam isso de gradiente eletroquímico. Para a prova, pense em concentração: maior → menor é passivo; menor → maior é ativo.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="cap-09" data-chapter="09" data-title="Difusão simples" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">09</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana · transporte passivo</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Difusão simples</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 8px;text-wrap:pretty">Abra um perfume num canto da sala: aos poucos o cheiro chega ao outro lado. As moléculas se movem ao acaso e acabam se espalhando da região mais concentrada para a menos concentrada. Isso é difusão.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px 48px;align-items:start">
+        <dc-import name="TransportSim" mode="simples" hint-size="100%,420px"></dc-import>
+        <div style="padding-top:24px">
+          <div class="blueprint" style="padding:18px 20px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Precisa saber</p>
+            <ul style="margin:0;padding-left:18px;display:grid;gap:6px;font:400 17px/1.5 var(--fb)"><li>A favor do gradiente: <strong>maior → menor</strong> concentração</li><li><strong>Sem gasto de ATP</strong></li><li><strong>Sem proteína transportadora</strong>: atravessa direto pela bicamada</li></ul>
+          </div>
+          <p style="margin:20px 0 0;font:400 16px/1.55 var(--fb)"><strong>Exemplos:</strong> gás oxigênio (O₂) entrando nas células e gás carbônico (CO₂) saindo; trocas de gases nos alvéolos dos pulmões. Passam assim moléculas pequenas e sem carga, que conseguem se misturar com as caudas dos fosfolipídios.</p>
+        </div>
+      </div>
+      <dc-import name="Quiz" qid="q8" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-10" data-chapter="10" data-title="Difusão facilitada" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">10</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana · transporte passivo</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Difusão facilitada</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 8px;text-wrap:pretty">Algumas substâncias, como a glicose e os íons, não conseguem atravessar a bicamada sozinhas. Elas passam por uma porta: uma proteína da membrana.</p>
+      <p style="margin:0 0 8px;font:600 clamp(28px,7vw,40px)/1.05 var(--fh)">FACILITADA = existe uma <span style="color:var(--accent-ink)">proteína</span> facilitando a passagem.</p>
+      <p style="margin:0;font:500 18px/1.5 var(--fb)">Mas continua passiva: <strong>maior → menor</strong> e <strong>sem gasto direto de ATP</strong>.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px 48px;align-items:start">
+        <dc-import name="TransportSim" mode="facilitada" hint-size="100%,420px"></dc-import>
+        <div style="padding-top:24px">
+          <div role="table" aria-label="Difusão simples comparada à facilitada">
+            <div role="row" style="display:grid;grid-template-columns:minmax(80px,.8fr) 1fr 1fr;gap:10px;padding-bottom:8px;border-bottom:2px solid var(--ink);font:600 13px/1.2 var(--fh);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)"><span role="columnheader"></span><span role="columnheader">Simples</span><span role="columnheader">Facilitada</span></div>
+            <div role="row" style="display:grid;grid-template-columns:minmax(80px,.8fr) 1fr 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font:400 15px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Por onde</span><span role="cell">Direto pela bicamada</span><span role="cell"><strong>Por proteína</strong> de membrana</span></div>
+            <div role="row" style="display:grid;grid-template-columns:minmax(80px,.8fr) 1fr 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font:400 15px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Sentido</span><span role="cell">Maior → menor</span><span role="cell">Maior → menor</span></div>
+            <div role="row" style="display:grid;grid-template-columns:minmax(80px,.8fr) 1fr 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font:400 15px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">ATP</span><span role="cell">Não gasta</span><span role="cell">Não gasta</span></div>
+            <div role="row" style="display:grid;grid-template-columns:minmax(80px,.8fr) 1fr 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font:400 15px/1.4 var(--fb)"><span role="rowheader" style="font:600 16px/1.2 var(--fh)">Exemplo</span><span role="cell">O₂, CO₂</span><span role="cell">Glicose, íons</span></div>
+          </div>
+          <details style="margin:20px 0 0;border:1px solid var(--line2)">
+            <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Canais e carregadores</summary>
+            <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0">Há dois tipos de proteína: <strong>canais</strong>, que formam um túnel (por exemplo, para íons), e <strong>proteínas carregadoras</strong>, que se ligam à substância e mudam de forma para soltá-la do outro lado (como na entrada de glicose em muitas células). A água também pode passar por canais especiais, as aquaporinas.</p></div>
+          </details>
+        </div>
+      </div>
+      <dc-import name="Quiz" qid="q9" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-11" data-chapter="11" data-title="Osmose" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">11</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana · transporte passivo</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Osmose</h2>
+      <div class="blueprint" style="padding:18px 20px;margin:0 0 28px;max-width:760px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Precisa saber</p>
+        <p style="margin:0;font:500 19px/1.5 var(--fb)"><strong>Osmose</strong> é o movimento de <strong style="color:var(--c-agua)">ÁGUA</strong> através de uma membrana seletivamente permeável, do meio com <strong>menos soluto</strong> para o meio com <strong>mais soluto</strong>. É passiva: sem gasto de ATP.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px 48px;max-width:980px">
+        <div><p style="margin:0 0 6px;font:600 22px/1.1 var(--fh)">O que realmente acontece</p><p style="margin:0;font:400 16px/1.6 var(--fb)">Imagine dois lados separados por uma membrana que deixa passar água, mas não o soluto (como o sal ou o açúcar). As moléculas de água atravessam nos <strong>dois sentidos</strong> o tempo todo. No lado com mais soluto, parte da água fica “ocupada” envolvendo essas partículas, e sobra proporcionalmente menos água livre para voltar. Resultado: o fluxo total de água é maior em direção ao lado com mais soluto.</p></div>
+        <div style="border-top:1px solid var(--ink);padding-top:12px">
+          <p style="display:flex;align-items:center;gap:8px;margin:0 0 6px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg>Não confunda</p>
+          <ul style="margin:0;padding-left:18px;display:grid;gap:6px;font:400 16px/1.55 var(--fb)"><li>A água <strong>não “procura” o sal</strong>. Ela se move ao acaso; o que muda é o saldo final entre entrada e saída.</li><li>Na osmose quem se move é a <strong>água</strong> (solvente). Na difusão, quem se move é o <strong>soluto</strong>.</li><li>Em relação à água: ela vai do meio mais diluído para o mais concentrado.</li></ul>
+        </div>
+      </div>
+      <h3 style="font:600 clamp(28px,7vw,40px)/1.05 var(--fh);margin:48px 0 6px">Experimento virtual</h3>
+      <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Aprofundamento · hipo, iso e hipertônico</p>
+      <p style="margin:0;font:400 16px/1.55 var(--fb);color:var(--muted);max-width:680px">Estes termos comparam a concentração de solutos do meio com a da célula. Escolha a célula e o meio e observe.</p>
+      <dc-import name="Osmose" hint-size="100%,560px"></dc-import>
+      <div style="margin:8px 0 0;max-width:720px">
+        <p style="display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+        <p style="margin:0;font:600 clamp(24px,6vw,32px)/1.15 var(--fh)"><strong>HIPER</strong>tônico = mais soluto fora → a água sai. <strong>HIPO</strong>tônico = menos soluto fora → a água entra.</p>
+      </div>
+      <dc-import name="Quiz" qid="q10" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-12" data-chapter="12" data-title="Transporte ativo" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">12</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana · transporte ativo</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Transporte ativo</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 8px;text-wrap:pretty">Às vezes a célula precisa acumular uma substância onde ela já está mais concentrada. Isso é subir a ladeira: só acontece com uma proteína que funciona como bomba e com gasto de energia.</p>
+      <p style="margin:0;font:600 clamp(28px,7vw,40px)/1.05 var(--fh)">MENOR → MAIOR concentração <span style="display:inline-flex;align-items:center;gap:6px;vertical-align:middle"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-atp"></use></svg>ATP</span></p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px 48px;align-items:start">
+        <dc-import name="TransportSim" mode="ativo" hint-size="100%,420px"></dc-import>
+        <div style="padding-top:24px">
+          <div style="margin:0 0 24px">
+            <p style="display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"></path></svg>Macete</p>
+            <p style="margin:0 0 6px;font:600 clamp(34px,9vw,48px)/1 var(--fh)"><span style="color:var(--accent-ink)">AT</span>ivo → <span style="color:var(--accent-ink)">AT</span>P</p>
+            <p style="margin:0;font:400 15px/1.5 var(--fb);color:var(--muted)">É só uma associação pelas letras iniciais, para ajudar a lembrar que o transporte ativo gasta energia.</p>
+          </div>
+          <div class="blueprint" style="padding:18px 20px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <p style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Precisa saber</p>
+            <p style="margin:0 0 6px;font:500 18px/1.45 var(--fb)"><strong>PASSIVO</strong> = sem gasto direto de ATP, a favor do gradiente.</p>
+            <p style="margin:0;font:500 18px/1.45 var(--fb)"><strong>ATIVO</strong> = requer energia (ATP) e proteína transportadora; pode ir contra o gradiente.</p>
+          </div>
+          <details style="margin:20px 0 0;border:1px solid var(--line2)">
+            <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>Entenda melhor · Bomba de sódio e potássio</summary>
+            <div style="padding:0 14px 14px;font:400 16px/1.6 var(--fb)"><p style="margin:0 0 10px">É o exemplo mais cobrado. A cada ATP gasto, essa proteína leva <strong>3 íons de sódio (Na⁺) para fora</strong> e <strong>2 íons de potássio (K⁺) para dentro</strong> da célula, os dois contra o gradiente. Ela mantém o interior com mais K⁺ e o exterior com mais Na⁺, o que é essencial, por exemplo, para o funcionamento dos neurônios.</p><p style="margin:0">Existem também transportes ativos que usam a energia de outro gradiente, e não o ATP diretamente (transporte ativo secundário). Para a prova, o foco é a bomba de Na⁺/K⁺.</p></div>
+          </details>
+        </div>
+      </div>
+      <dc-import name="Quiz" qid="q11" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-13" data-chapter="13" data-title="Compare para não confundir" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">13</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Membrana · revisão</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Compare para não confundir</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 32px;text-wrap:pretty">Os quatro transportes lado a lado. Este é o quadro para revisar na véspera.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px">
+        <div class="blueprint" style="padding:18px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 2px;font:600 12px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Passivo</p>
+          <p style="margin:0 0 12px;font:600 28px/1 var(--fh)">Difusão simples</p>
+          <svg viewBox="0 0 120 70" aria-hidden="true" style="width:100%;max-width:200px;height:auto;margin-bottom:12px"><rect x="0" y="28" width="120" height="14" style="fill:color-mix(in oklch, var(--accent) 30%, transparent)"></rect><g style="fill:var(--ink)"><circle cx="16" cy="8" r="3"></circle><circle cx="30" cy="16" r="3"></circle><circle cx="44" cy="6" r="3"></circle><circle cx="92" cy="12" r="3"></circle><circle cx="104" cy="6" r="3"></circle><circle cx="84" cy="60" r="3"></circle></g><path d="M62 4 V64" style="stroke:var(--ink);stroke-width:2;marker-end:url(#arr)"></path></svg>
+          <dl style="margin:0;display:grid;gap:8px;font:400 15px/1.35 var(--fb)">
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Sentido</dt><dd style="margin:0">maior → menor</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Proteína</dt><dd style="margin:0">— sem proteína transportadora</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Energia</dt><dd style="margin:0">— sem ATP</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Exemplo</dt><dd style="margin:0">O₂, CO₂</dd></div>
+          </dl>
+        </div>
+        <div class="blueprint" style="padding:18px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 2px;font:600 12px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Passivo</p>
+          <p style="margin:0 0 12px;font:600 28px/1 var(--fh)">Difusão facilitada</p>
+          <svg viewBox="0 0 120 70" aria-hidden="true" style="width:100%;max-width:200px;height:auto;margin-bottom:12px"><rect x="0" y="28" width="120" height="14" style="fill:color-mix(in oklch, var(--accent) 30%, transparent)"></rect><g style="fill:var(--c-prot)"><rect x="48" y="22" width="8" height="26" rx="3"></rect><rect x="68" y="22" width="8" height="26" rx="3"></rect></g><g style="fill:var(--ink)"><polygon points="20,4 24,6.5 24,11.5 20,14 16,11.5 16,6.5"></polygon><polygon points="36,10 40,12.5 40,17.5 36,20 32,17.5 32,12.5"></polygon><polygon points="96,6 100,8.5 100,13.5 96,16 92,13.5 92,8.5"></polygon><polygon points="96,56 100,58.5 100,63.5 96,66 92,63.5 92,58.5"></polygon></g><path d="M62 4 V64" style="stroke:var(--ink);stroke-width:2;marker-end:url(#arr)"></path></svg>
+          <dl style="margin:0;display:grid;gap:8px;font:400 15px/1.35 var(--fb)">
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Sentido</dt><dd style="margin:0">maior → menor</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Proteína</dt><dd style="margin:0"><strong>✓ com proteína de membrana</strong></dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Energia</dt><dd style="margin:0">— sem ATP</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Exemplo</dt><dd style="margin:0">glicose, íons</dd></div>
+          </dl>
+        </div>
+        <div class="blueprint" style="padding:18px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 2px;font:600 12px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Passivo</p>
+          <p style="margin:0 0 12px;font:600 28px/1 var(--fh)">Osmose</p>
+          <svg viewBox="0 0 120 70" aria-hidden="true" style="width:100%;max-width:200px;height:auto;margin-bottom:12px"><rect x="0" y="28" width="120" height="14" style="fill:color-mix(in oklch, var(--accent) 30%, transparent)"></rect><use href="#s-agua" x="20" y="2" width="16" height="16"></use><use href="#s-agua" x="86" y="4" width="14" height="14"></use><use href="#s-agua" x="30" y="50" width="14" height="14"></use><g style="fill:var(--ink)"><circle cx="84" cy="54" r="3"></circle><circle cx="96" cy="62" r="3"></circle><circle cx="104" cy="52" r="3"></circle></g><path d="M62 4 V64" style="stroke:var(--c-agua);stroke-width:2.5;marker-end:url(#arr-agua)"></path></svg>
+          <dl style="margin:0;display:grid;gap:8px;font:400 15px/1.35 var(--fb)">
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">O que passa</dt><dd style="margin:0"><strong>água</strong></dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Sentido</dt><dd style="margin:0">menos soluto → mais soluto</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Energia</dt><dd style="margin:0">— sem ATP</dd></div>
+          </dl>
+        </div>
+        <div class="blueprint" style="padding:18px;border-color:var(--ink)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p style="margin:0 0 2px;font:600 12px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)">Ativo</p>
+          <p style="margin:0 0 12px;font:600 28px/1 var(--fh)">Transporte ativo</p>
+          <svg viewBox="0 0 120 70" aria-hidden="true" style="width:100%;max-width:200px;height:auto;margin-bottom:12px"><rect x="0" y="28" width="120" height="14" style="fill:color-mix(in oklch, var(--accent) 30%, transparent)"></rect><rect x="50" y="20" width="24" height="30" rx="6" style="fill:var(--c-prot)"></rect><use href="#s-atp" x="80" y="48" width="18" height="18"></use><g style="fill:none;stroke:var(--ink);stroke-width:1.8"><circle cx="16" cy="8" r="3"></circle><circle cx="30" cy="14" r="3"></circle><circle cx="96" cy="8" r="3"></circle><circle cx="108" cy="16" r="3"></circle><circle cx="30" cy="60" r="3"></circle></g><path d="M62 64 V4" style="stroke:var(--ink);stroke-width:2;marker-end:url(#arr)"></path></svg>
+          <dl style="margin:0;display:grid;gap:8px;font:400 15px/1.35 var(--fb)">
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Sentido</dt><dd style="margin:0"><strong>pode ir contra o gradiente</strong> (menor → maior)</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Proteína</dt><dd style="margin:0"><strong>✓ proteínas de transporte</strong> (bombas)</dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Energia</dt><dd style="margin:0"><strong>✓ gasta ATP</strong></dd></div>
+            <div style="display:grid;grid-template-columns:78px 1fr;gap:6px"><dt style="font:600 13px/1.4 var(--fh);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Exemplo</dt><dd style="margin:0">bomba de Na⁺/K⁺</dd></div>
+          </dl>
+        </div>
+      </div>
+      <h3 style="font:600 clamp(28px,7vw,40px)/1.05 var(--fh);margin:56px 0 18px">Como identificar numa questão</h3>
+      <ol style="list-style:none;margin:0;padding:0;display:grid;gap:0;max-width:760px">
+        <li style="display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px 0;border-top:1px solid var(--line2)"><span style="font:600 32px/1 var(--fh);color:var(--accent-ink)">1</span><div><p style="margin:0 0 4px;font:600 21px/1.2 var(--fh)">O que está passando é água?</p><p style="margin:0;font:400 16px/1.5 var(--fb)">Sim → <strong>osmose</strong>. Não → vá para a pergunta 2.</p></div></li>
+        <li style="display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px 0;border-top:1px solid var(--line2)"><span style="font:600 32px/1 var(--fh);color:var(--accent-ink)">2</span><div><p style="margin:0 0 4px;font:600 21px/1.2 var(--fh)">Vai de menor para maior concentração ou gasta ATP?</p><p style="margin:0;font:400 16px/1.5 var(--fb)">Sim → <strong>transporte ativo</strong>. Não → é passivo; vá para a pergunta 3.</p></div></li>
+        <li style="display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px 0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)"><span style="font:600 32px/1 var(--fh);color:var(--accent-ink)">3</span><div><p style="margin:0 0 4px;font:600 21px/1.2 var(--fh)">Passa por uma proteína de membrana?</p><p style="margin:0;font:400 16px/1.5 var(--fb)">Sim → <strong>difusão facilitada</strong>. Não, atravessa direto → <strong>difusão simples</strong>.</p></div></li>
+      </ol>
+      <dc-import name="Quiz" qid="q12" hint-size="100%,420px"></dc-import>
+    </div>
+  </section>
+  <section id="cap-14" data-chapter="14" data-title="Mapa final da célula" data-pbreak="" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">14</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Memorização</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Mapa final da célula</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0 0 8px;text-wrap:pretty">Lembra do desenho da cidade celular? Agora, sem rótulos. Você consegue reconhecer cada estrutura só pela forma?</p>
+      <dc-import name="Quiz" qid="q13" hint-size="100%,420px"></dc-import>
+      <dc-import name="MonteCelula" hint-size="100%,640px"></dc-import>
+      <h3 style="font:600 clamp(28px,7vw,40px)/1.05 var(--fh);margin:56px 0 8px">Agora a imagem faz sentido</h3>
+      <p style="font:400 17px/1.55 var(--fb);max-width:680px;margin:0 0 24px;color:var(--muted)">As setas tracejadas mostram o caminho das proteínas de secreção.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px 48px;align-items:start">
+        <div class="blueprint" style="padding:14px 8px"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <dc-import name="CellMap" labels="{{ true }}" flow="{{ true }}" hint-size="100%,300px"></dc-import>
+        </div>
+        <div style="display:grid;gap:22px">
+          <div style="border-top:2px solid var(--ink);padding-top:12px">
+            <p style="margin:0 0 10px;font:600 13px/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Linha de produção</p>
+            <p style="margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font:600 21px/1.2 var(--fh)"><span style="color:var(--c-ribo)">Ribossomo</span><span aria-hidden="true">→</span><span style="color:var(--c-rer)">RER</span><span aria-hidden="true">→</span><span>vesículas</span><span aria-hidden="true">→</span><span style="color:var(--c-golgi)">Golgi</span><span aria-hidden="true">→</span><span>destino</span></p>
+            <p style="margin:6px 0 0;font:400 15px/1.5 var(--fb);color:var(--muted)">Destino: secreção pela membrana, a própria membrana ou os lisossomos.</p>
+          </div>
+          <div style="border-top:1px solid var(--line2);padding-top:12px"><p style="margin:0;font:600 21px/1.2 var(--fh)"><span style="color:var(--c-rel)">REL</span> → lipídios <span style="font:400 15px/1.5 var(--fb);color:var(--muted)">e desintoxicação</span></p></div>
+          <div style="border-top:1px solid var(--line2);padding-top:12px"><p style="margin:0;font:600 21px/1.2 var(--fh)"><span style="color:var(--c-liso)">Lisossomo</span> → digestão e reciclagem</p></div>
+          <div style="border-top:1px solid var(--line2);padding-top:12px"><p style="margin:0;font:600 21px/1.2 var(--fh)"><span style="color:var(--accent-ink)">Membrana</span> → controle das trocas</p></div>
+          <div style="border-top:1px solid var(--line2);padding-top:12px"><p style="margin:0;font:600 21px/1.2 var(--fh)"><span style="color:var(--c-nucleo)">Núcleo</span> → guarda o DNA, de onde sai a informação</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cap-15" data-chapter="15" data-title="Modo memorização" data-noprint="" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">15</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Memorização</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Modo memorização</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0;text-wrap:pretty">Leia a frente, tente responder de cabeça e só depois vire o cartão. Seja honesta na marcação: os cartões marcados como “preciso revisar” podem ser treinados separadamente.</p>
+      <dc-import name="Flashcards" hint-size="100%,560px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-16" data-chapter="16" data-title="Simulado final" data-noprint="" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">16</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Simulado</span></div>
+      <h2 style="font:600 clamp(38px,10vw,68px)/.98 var(--fh);letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance">Simulado final</h2>
+      <p style="font:400 19px/1.55 var(--fb);max-width:680px;margin:0;text-wrap:pretty">17 questões sobre todo o conteúdo: múltipla escolha, verdadeiro ou falso, associação, interpretação de imagens e situações-problema. No final você vê o que já domina e o que precisa revisar.</p>
+      <dc-import name="Simulado" hint-size="100%,640px"></dc-import>
+    </div>
+  </section>
+
+  <section id="cap-17" data-chapter="17" data-title="5 minutos antes da prova" data-pbreak="" style="scroll-margin-top:96px;padding:72px 20px 56px;border-top:1px solid var(--line)">
+    <div style="max-width:1080px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px"><span style="font:600 15px/1 var(--fh);letter-spacing:.14em;color:var(--accent-ink)">17</span><span style="font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Revisão expressa</span></div>
+      <h2 style="font:600 clamp(44px,13vw,88px)/.92 var(--fh);letter-spacing:-.02em;margin:0 0 28px;text-wrap:balance">5 minutos antes da prova</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px 56px">
+        <div>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)">Tipos de célula</p>
+          <dl style="margin:0">
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="40" height="24" viewBox="0 0 300 170" aria-hidden="true"><use href="#s-proc"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Procarionte</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → sem núcleo delimitado por membrana; DNA no nucleoide</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="40" height="24" viewBox="0 0 300 170" aria-hidden="true"><use href="#s-euca"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Eucarionte</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → núcleo delimitado por membrana; animais, plantas, fungos</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span aria-hidden="true" style="width:34px;height:22px;border:4px solid var(--c-parede)"></span><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Parede</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → planta: celulose · fungo: quitina · animal: não tem</dd></div></div>
+          </dl>
+          <p style="margin:28px 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)">Organelas</p>
+          <dl style="margin:0">
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="24" height="24" viewBox="0 0 20 20" aria-hidden="true"><use href="#s-ribo"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Ribossomo</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → proteínas</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="40" height="25" viewBox="0 0 124 76" aria-hidden="true"><use href="#s-rer"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">RER</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → ribossomos / proteínas</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="40" height="25" viewBox="0 0 124 76" aria-hidden="true"><use href="#s-rel"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">REL</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → lipídios (e desintoxicação)</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="36" height="30" viewBox="0 0 110 90" aria-hidden="true"><use href="#s-golgi"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Golgi</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → modifica, organiza, empacota, direciona</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="26" height="26" viewBox="0 0 40 40" aria-hidden="true"><use href="#s-liso"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Lisossomo</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → digestão / reciclagem</dd></div></div>
+          </dl>
+        </div>
+        <div>
+          <p style="margin:0 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)">Transportes</p>
+          <dl style="margin:0">
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span aria-hidden="true" style="font:600 13px/1 var(--fh);color:var(--muted)">PASS.</span><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Difusão simples</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → maior → menor, direto pela bicamada, sem ATP</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span aria-hidden="true" style="font:600 13px/1 var(--fh);color:var(--muted)">PASS.</span><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Difusão facilitada</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → maior → menor + proteína, sem ATP</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-agua"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Osmose</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → água; vai para o lado com mais soluto; sem ATP</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-atp"></use></svg><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Transporte ativo</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → energia (ATP) + proteína; pode ir contra o gradiente</dd></div></div>
+            <div style="display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span aria-hidden="true" style="font:600 13px/1 var(--fh);color:var(--muted)">OSM.</span><div><dt style="display:inline;font:600 20px/1.2 var(--fh)">Hiper / Hipo</dt><dd style="display:inline;margin:0;font:400 16px/1.4 var(--fb)"> → hipertônico: célula perde água · hipotônico: célula ganha água</dd></div></div>
+          </dl>
+          <p style="margin:28px 0 4px;font:600 13px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)">Macetes</p>
+          <ul style="list-style:none;margin:0;padding:0;display:grid;gap:0;font:600 22px/1.25 var(--fh)">
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">EU tenho núcleo → EUcarionte</li>
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">Rugoso → Ribossomos → pRoteínas</li>
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">Liso → Lipídios</li>
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">Golgi = MOED (Modifica, Organiza, Empacota, Direciona)</li>
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">Lise = quebra → Lisossomo digere</li>
+            <li style="padding:10px 0;border-bottom:1px solid var(--line)">ATivo → ATP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer data-noprint="" style="border-top:1px solid var(--line);padding:40px 20px 56px;background:var(--bg);color:var(--ink)">
+  <div style="max-width:1080px;margin:0 auto;display:grid;gap:18px">
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button type="button" onClick="{{ askReset }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">{{ resetLabel }}</button>
+      <button type="button" onClick="{{ printIt }}" style="min-height:44px;padding:8px 16px;border:1px solid var(--line2);background:transparent;color:var(--ink);font:600 16px/1 var(--fh);cursor:pointer" style-hover="background: var(--hover)">Imprimir resumo</button>
+      <a href="#topo" style="min-height:44px;display:inline-flex;align-items:center;padding:0 12px;font:600 16px/1 var(--fh)">↑ Voltar ao início</a>
+    </div>
+    <p style="margin:0;max-width:680px;font:400 14px/1.55 var(--fb);color:var(--muted)">Ilustrações esquemáticas feitas para este material, fora de escala. As cores e formas identificam cada estrutura de forma consistente; os nomes sempre acompanham as cores. Seu progresso fica salvo apenas neste navegador.</p>
+  </div>
+</footer>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STAGES = [
+  { id: 'celula', label: 'Célula', caps: ['01', '02'] },
+  { id: 'tipos', label: 'Tipos', caps: ['03', '04'] },
+  { id: 'organelas', label: 'Organelas', caps: ['05', '06', '07'] },
+  { id: 'membrana', label: 'Membrana', caps: ['08', '09', '10', '11', '12', '13'] },
+  { id: 'memoria', label: 'Memorização', caps: ['14', '15'] },
+  { id: 'simulado', label: 'Simulado', caps: ['16', '17'] }
+];
+const TITLES = { '01': 'O mundo das células', '02': 'Anatomia básica', '03': 'Procarionte × Eucarionte', '04': 'Animal × Vegetal × Fungos', '05': 'A cidade celular', '06': 'Conhecendo as organelas', '07': 'A viagem de uma proteína', '08': 'Membrana plasmática', '09': 'Difusão simples', '10': 'Difusão facilitada', '11': 'Osmose', '12': 'Transporte ativo', '13': 'Compare para não confundir', '14': 'Mapa final da célula', '15': 'Modo memorização', '16': 'Simulado final', '17': '5 minutos antes da prova' };
+const ZF = [1, 0.42, 0.18, 0.075, 0.032], ZC = [[0, 0], [20, 15], [30, 23], [34, 26], [35.5, 27.2]];
+const LADDER = [
+  ['Organismo', 'Você: um ser vivo completo.'],
+  ['Sistema', 'O sistema digestório: órgãos que trabalham juntos para digerir os alimentos.'],
+  ['Órgão', 'O estômago, um dos órgãos desse sistema.'],
+  ['Tecido', 'O tecido epitelial que reveste o estômago por dentro: um grupo de células parecidas, com a mesma função.'],
+  ['Célula', 'Uma célula desse tecido. Chegamos à unidade básica da vida.']
+];
+const CITY = {
+  membrana: ['Membrana plasmática', 'Portaria e muralha da cidade: controla quem entra e quem sai.', 'Bicamada de fosfolipídios com proteínas. É seletivamente permeável: regula as trocas entre a célula e o meio.', 'Uma portaria decide de propósito; a membrana “seleciona” pelas características das substâncias e das proteínas que possui.'],
+  nucleo: ['Núcleo', 'Arquivo central com os projetos da cidade.', 'Envolvido por membrana dupla com poros (envoltório nuclear). Guarda o DNA, que tem as informações para produzir proteínas e, assim, controlar as atividades da célula.', 'O DNA não “dá ordens”: sua informação é copiada em RNA, que é usado pelos ribossomos.'],
+  ribo: ['Ribossomos', 'Linhas de montagem que seguem uma receita.', 'Estruturas sem membrana, formadas por RNA e proteínas. Fazem a síntese de proteínas lendo o RNA mensageiro. Ficam livres no citoplasma ou presos ao RER.', 'Não são fábricas completas: só unem aminoácidos na ordem indicada pelo RNA mensageiro.'],
+  rer: ['Retículo endoplasmático rugoso', 'Galpões com linhas de montagem instaladas na parede.', 'Rede de sacos achatados, ligada ao envoltório nuclear, com ribossomos aderidos. Recebe, dobra e processa proteínas que serão secretadas ou enviadas a membranas e lisossomos.', 'Quem monta a proteína é o ribossomo preso ao RER, não o retículo.'],
+  rel: ['Retículo endoplasmático liso', 'Refinaria de gorduras e estação de tratamento.', 'Rede de tubos sem ribossomos. Produz lipídios (como fosfolipídios e hormônios esteroides) e, em células como as do fígado, participa da desintoxicação.', 'Desintoxicar não é guardar lixo: é transformar substâncias para que possam ser eliminadas.'],
+  golgi: ['Complexo golgiense', 'Centro de correios: recebe, confere, embala e despacha.', 'Pilhas de sacos achatados (cisternas). Recebe vesículas do RER, modifica (por exemplo, acrescentando açúcares), organiza, empacota e direciona substâncias à secreção, à membrana ou aos lisossomos.', 'Não existe endereço escrito: a separação depende de sinais químicos nas próprias moléculas.'],
+  liso: ['Lisossomos', 'Centro de reciclagem.', 'Vesículas com enzimas digestivas, formadas pelo Golgi. Fazem a digestão intracelular de materiais englobados e de partes velhas da própria célula (autofagia).', 'Quase nada vira “lixo”: os produtos da digestão são reaproveitados pela célula.'],
+  mito: ['Mitocôndrias', 'Usina de energia.', 'Organelas de membrana dupla onde ocorre a respiração celular: a energia dos alimentos é transferida para moléculas de ATP. (Não está na lista da prova, mas aparece na comparação entre tipos de célula.)', 'A energia não é “fabricada”: é transferida das moléculas de alimento para o ATP.'],
+  vesic: ['Vesículas', 'Caminhões de entrega.', 'Pequenas bolsas de membrana que transportam substâncias entre RER, Golgi e membrana plasmática.', 'Elas não seguem ruas fixas; deslocam-se pelo citoplasma, muitas vezes guiadas pelo citoesqueleto.']
+};
+const ORGS = [['ribo', 'Ribossomo', '#s-ribo', '0 0 20 20'], ['rer', 'RER', '#s-rer', '0 0 124 76'], ['rel', 'REL', '#s-rel', '0 0 124 76'], ['golgi', 'Golgi', '#s-golgi', '0 0 110 90'], ['liso', 'Lisossomo', '#s-liso', '0 0 40 40']];
+const STEPS = [
+  ['O gene, no núcleo', 'O DNA, dentro do núcleo, guarda a informação (o gene) para fabricar uma proteína. Nosso exemplo: a insulina, produzida por células do pâncreas e liberada no sangue.', ['nuc'], null],
+  ['Uma cópia sai: RNA mensageiro', 'A informação do gene é copiada numa molécula de RNA mensageiro (RNAm), que sai do núcleo pelos poros do envoltório nuclear.', ['nuc', 'mrna'], null],
+  ['O ribossomo monta a proteína', 'Um ribossomo lê o RNAm e une aminoácidos na ordem certa. Como essa proteína será exportada, o ribossomo fica preso ao RER e a cadeia vai entrando no retículo.', ['ribo', 'rer'], [137, 70, 0]],
+  ['Dentro do RER', 'No interior do RER, a proteína é dobrada e recebe as primeiras modificações.', ['rer'], [176, 98, 0]],
+  ['Vesícula de transporte', 'Um pedaço da membrana do RER se destaca e forma uma vesícula, que leva a proteína até o complexo golgiense.', ['v1'], [238, 112, 1]],
+  ['No complexo golgiense', 'O Golgi modifica, organiza e empacota a proteína, direcionando-a ao destino certo: neste caso, a secreção.', ['golgi'], [290, 100, 0]],
+  ['Secreção', 'Uma vesícula de secreção leva a proteína até a membrana plasmática. As membranas se fundem e a insulina é liberada para fora da célula.', ['mem'], [366, 184, 0]]
+];
+const K = 'celula.v1.';
+class Component extends DCLogic {
+  state = { theme: 'light', visited: [], current: '', menuOpen: false, zoom: 0, dna: false, city: 'nucleo', org: 'ribo', step: 0, playing: false, confirmReset: false };
+  componentDidMount() {
+    let theme = null, visited = [];
+    try { theme = localStorage.getItem(K + 'theme'); visited = JSON.parse(localStorage.getItem(K + 'visited') || '[]'); } catch (e) {}
+    if (!theme) theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    this.setState({ theme, visited });
+    this.io = new IntersectionObserver((ents) => {
+      ents.forEach(e => {
+        if (!e.isIntersecting) return;
+        const id = e.target.getAttribute('data-chapter');
+        this.setState(s => {
+          const v = s.visited.includes(id) ? s.visited : [...s.visited, id];
+          if (v !== s.visited) { try { localStorage.setItem(K + 'visited', JSON.stringify(v)); } catch (err) {} }
+          return { current: id, visited: v };
+        });
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    document.querySelectorAll('[data-chapter]').forEach(el => this.io.observe(el));
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); clearInterval(this.timer); }
+  setTheme(t) { document.documentElement.dataset.theme = t; try { localStorage.setItem(K + 'theme', t); } catch (e) {} this.setState({ theme: t }); }
+  play() {
+    clearInterval(this.timer);
+    if (this.state.playing) { this.setState({ playing: false }); return; }
+    this.setState(s => ({ playing: true, step: s.step >= 6 ? 0 : s.step }));
+    this.timer = setInterval(() => { if (this.state.step >= 6) { clearInterval(this.timer); this.setState({ playing: false }); } else this.setState(s => ({ step: s.step + 1 })); }, 2600);
+  }
+  renderVals() {
+    const st = this.state, dark = st.theme === 'dark';
+    const curStage = STAGES.find(s => s.caps.includes(st.current));
+    const stages = STAGES.map(s => {
+      const seen = s.caps.some(c => st.visited.includes(c)), all = s.caps.every(c => st.visited.includes(c)), cur = curStage && curStage.id === s.id;
+      return { label: s.label, href: '#cap-' + s.caps[0], current: cur ? 'step' : undefined,
+        aria: `${s.label}: ${all ? 'concluída' : seen ? 'em andamento' : 'não iniciada'}${cur ? ', etapa atual' : ''}`,
+        color: cur ? 'var(--ink)' : 'var(--muted)', bar: all ? 'var(--accent)' : seen ? 'color-mix(in oklch, var(--accent) 45%, transparent)' : 'transparent',
+        barBorder: all || seen ? 'var(--accent)' : 'var(--line2)' };
+    });
+    const chapters = Object.keys(TITLES).map(n => ({ n, title: TITLES[n], href: '#cap-' + n, mark: st.visited.includes(n) ? '● visto' : '○' }));
+    const z = st.zoom, f = ZF[z];
+    const zRects = ZF.map((ff, k) => {
+      const s = 180 * ff, [cx, cy] = ZC[k], on = k === z, past = k < z;
+      return { x: cx - s / 2, y: cy - s / 2, s, tx: cx - s / 2 + 5 * ff, ty: cy - s / 2 + 14 * ff, fs: 11 * ff, label: LADDER[k][0].toUpperCase(),
+        stroke: on ? 'var(--accent)' : 'var(--muted)', sw: on ? 2 : 1, fill: k === 4 ? 'transparent' : on ? 'color-mix(in oklch, var(--accent) 5%, transparent)' : 'transparent' };
+    });
+    const cs = 180 * ZF[4] * 0.8;
+    const ladder = LADDER.map(([name, ex], k) => ({ name, ex, current: k === z, arrow: k === z ? '●' : k < z ? '↓' : '○', op: k <= z ? 1 : 0.55, go: () => this.setState({ zoom: k }) }));
+    const org = st.org, orgDisp = {}; ORGS.forEach(([id]) => { orgDisp[id] = id === org ? 'block' : 'none'; });
+    const oi = ORGS.findIndex(o => o[0] === org), nxt = ORGS[(oi + 1) % ORGS.length];
+    const orgTabs = ORGS.map(([id, name, sym, vb], i) => ({ name, sym, vb, n: i + 1, on: id === org, bg: id === org ? 'color-mix(in oklch, var(--accent) 12%, transparent)' : 'transparent', border: id === org ? 'var(--accent)' : 'var(--line2)', bw: id === org ? '2px' : '1px', pick: () => this.setState({ org: id }) }));
+    const c = CITY[st.city];
+    const cityChips = Object.keys(CITY).map(id => ({ name: CITY[id][0], on: id === st.city, bg: id === st.city ? 'var(--accent)' : 'transparent', fg: id === st.city ? 'var(--on-accent)' : 'var(--ink)', border: id === st.city ? 'var(--accent)' : 'var(--line2)', pick: () => this.setState({ city: id }) }));
+    const S = STEPS[st.step], hi = S[2], tok = S[3] || STEPS[2][3];
+    const jo = (k) => hi.includes(k) ? 1 : 0.28;
+    const steps = STEPS.map((s, i) => ({ n: i + 1, on: i === st.step, bg: i === st.step ? 'var(--accent)' : i < st.step ? 'color-mix(in oklch, var(--accent) 40%, transparent)' : 'transparent', border: i <= st.step ? 'var(--accent)' : 'var(--line2)', aria: `Etapa ${i + 1}: ${s[0]}`, go: () => { clearInterval(this.timer); this.setState({ step: i, playing: false }); } }));
+    return {
+      currentLabel: st.current ? `${st.current} · ${TITLES[st.current]}` : 'Uma viagem por dentro da vida',
+      themeIcon: dark ? 'M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41' : 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z',
+      themeAria: dark ? 'Mudar para modo claro' : 'Mudar para modo escuro',
+      toggleTheme: () => this.setTheme(dark ? 'light' : 'dark'),
+      menuOpen: st.menuOpen, toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen, confirmReset: false })), closeMenu: () => this.setState({ menuOpen: false }),
+      stages, chapters, visitedCount: st.visited.length,
+      resetLabel: st.confirmReset ? 'Tem certeza? Toque de novo para apagar tudo' : 'Recomeçar estudo',
+      askReset: () => {
+        if (!st.confirmReset) { this.setState({ confirmReset: true }); return; }
+        try { Object.keys(localStorage).filter(k => k.startsWith(K) && k !== K + 'theme').forEach(k => localStorage.removeItem(k)); } catch (e) {}
+        location.hash = ''; location.reload();
+      },
+      printIt: () => { this.setState({ menuOpen: false }); setTimeout(() => window.print(), 100); },
+      zs: 1 / f, ztx: -ZC[z][0], zty: -ZC[z][1], zRects,
+      zCol: ZF.map((_, k) => k === z ? 'var(--accent)' : 'var(--muted)'), zW: ZF.map((_, k) => k === z ? 2 : 1), zc: { x: ZC[4][0] - cs / 2, y: ZC[4][1] - cs * 170 / 600, w: cs, h: cs * 170 / 300 },
+      zoomAria: `Zoom no nível: ${LADDER[z][0]}. ${LADDER[z][1]}`, ladder,
+      zoomIn: () => this.setState(s => ({ zoom: Math.min(4, s.zoom + 1) })), zoomOut: () => this.setState(s => ({ zoom: Math.max(0, s.zoom - 1) })),
+      zoomMin: z === 0, zoomOutOp: z === 0 ? 0.4 : 1, zoomNotEnd: z < 4, zoomEnd: z === 4,
+      dnaOn: st.dna, oDna: 1, oOther: st.dna ? 0.18 : 1, dnaLabel: st.dna ? 'Mostrar a célula inteira' : 'Onde está o DNA? Toque para ver',
+      toggleDna: () => this.setState(s => ({ dna: !s.dna })),
+      cityPick: (id) => this.setState({ city: id }), city: st.city, cityChips,
+      cityName: c[0], cityAnalogy: c[1], cityBio: c[2], cityLimit: c[3],
+      orgDisp, orgTabs, nextOrgName: nxt[1], nextOrg: () => { this.setState({ org: nxt[0] }); const el = document.getElementById('org-top'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); },
+      stepNum: st.step + 1, stepTitle: S[0], stepText: S[1], steps,
+      jNuc: jo('nuc'), jMrna: jo('mrna'), jRibo: jo('ribo'), jRer: hi.includes('rer') || hi.includes('ribo') ? 1 : 0.28, jGolgi: jo('golgi'), jMem: jo('mem'),
+      tokX: tok[0], tokY: tok[1], tokOp: S[3] ? 1 : 0, ringOp: S[3] && S[3][2] ? 1 : (st.step === 6 ? 0 : 0),
+      prevStep: () => { clearInterval(this.timer); this.setState(s => ({ step: Math.max(0, s.step - 1), playing: false })); },
+      nextStep: () => { clearInterval(this.timer); this.setState(s => ({ step: Math.min(6, s.step + 1), playing: false })); },
+      playLabel: st.playing ? '❚❚ Pausar' : '▶ Reproduzir a viagem', playSteps: () => this.play(),
+      prevDisabled: st.step === 0, nextDisabled: st.step === 6
+    };
+  }
+}
+</script>
+</body>
+</html>
